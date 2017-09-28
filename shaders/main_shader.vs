@@ -1,8 +1,9 @@
-#version 330 
+#version 330
+
 attribute vec3 coord3d;
+uniform mat4 projection;
+uniform mat4 model;
 
 void main(void) {
-   vec4 a = vec4(coord3d, 0);
-
-   gl_Position = a;
-} 
+   gl_Position = projection * model * vec4(coord3d, 1.0);
+}
