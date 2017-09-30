@@ -84,7 +84,11 @@ void GameCore_t<MAP_SIZE>::step(float dtime, bool flap) {
 	{
 		_state = DEAD;
 	}
-		_y_velocity += (_y_accel + _y_flap_accel * flap) * dtime;
+		if (flap) {
+			_y_velocity = _y_flap_accel;
+		} else {
+			_y_velocity += _y_accel * dtime;
+		}
 		_x_pos += _x_velocity * dtime;
 		_y_pos += _y_velocity * dtime;
 }
