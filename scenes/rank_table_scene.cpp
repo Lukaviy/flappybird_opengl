@@ -43,9 +43,10 @@ void RankTableScene_t::reset() {
 
 	_press_space_animation.stop();
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
-
-	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f);
-	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f);
+	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f).
+		start_with(_press_space_animation);
+	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f).
+		start_with(_best_score_appearence_animation);
 
 	starter.start();
 }
@@ -90,8 +91,6 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_rank_table.save_score(_player_name.c_str(), _score);
 			_status = SCORE_SAVED;
 			_press_space_animation.start();
-			_best_score_appearence_animation.start();
-			_best_score_text_color_animation.start();
 		}
 	}
 }
