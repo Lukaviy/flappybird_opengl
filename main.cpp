@@ -32,6 +32,8 @@ GameCore_t game_core(
 );
 
 int main() {
+	srand(time(0));
+
 	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube", sf::Style::Titlebar | sf::Style::Close);
 
 	sf::Font font;
