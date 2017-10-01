@@ -33,6 +33,11 @@ int main() {
 	RankTableTextFileDb_t rank_table_db("scores.txt");
 
 	RankTable_t rank_table(rank_table_db);
+	try {
+		rank_table.load_ranks();
+	} catch(RankTableException_t) {
+		std::cout << "Can't load ranks" << std::endl;
+	}
 
 	RankTableScene_t rank_table_scene(rank_table);
 	rank_table_scene.set_size(sf::Vector2f(400, 300));
