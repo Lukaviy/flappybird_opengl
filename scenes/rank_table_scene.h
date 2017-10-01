@@ -41,6 +41,7 @@ protected:
 	sf::Text _enter_your_name_text;
 	sf::Text _curr_player_name_text;
 	sf::Text _press_space_text;
+	sf::Text _best_score_text;
 	sf::Color _score_text_color;
 
 	sf::View _view;

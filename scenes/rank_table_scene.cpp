@@ -15,7 +15,8 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 {
 	_enter_your_name_text = sf::Text("Enter your name: ", _font, 30);
 	_curr_player_name_text = sf::Text("", _font, 30);
-	_press_space_text = sf::Text("Press space to restart", _font, 20.f);
+	_press_space_text = sf::Text("Press space to restart", _font, 20);
+	_best_score_text = sf::Text("Best score: ", _font, 30);
 	RankTableScene_t::reset();
 	_status = START;
 }
@@ -43,7 +44,7 @@ void RankTableScene_t::reset() {
 	_press_space_animation.stop();
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 
-	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 30.f, 0.3f);
+	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f);
 	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f);
 
 	starter.start();
@@ -62,8 +63,12 @@ void RankTableScene_t::step(float dt) {
 	_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
 	_score_text_color = sf::Color(255, 255, 255, _appearence_text_color_animation.val());
 	_score_appearence_animation.val();
-	_best_score_appearence_animation.val();
-	_best_score_text_color_animation.val();
+
+	if (_status == SCORE_SAVED) {
+		_best_score_text.setString(std::string("Best score: ") + std::to_string(_rank_table[_player_name].score));
+		_best_score_text.setFillColor(sf::Color(255, 255, 255, _best_score_text_color_animation.val()));
+		_best_score_text.setPosition(30.f, _best_score_appearence_animation.val() + 30.f);
+	}
 }
 
 void RankTableScene_t::send_event(sf::Event event) {
@@ -71,8 +76,7 @@ void RankTableScene_t::send_event(sf::Event event) {
 		event.text.unicode >= 'a' && event.text.unicode <= 'z' ||
 		event.text.unicode >= 'A' && event.text.unicode <= 'Z' ||
 		event.text.unicode >= '0' && event.text.unicode <= '9'
-		)) 
-	{
+	)) {
 		_player_name += static_cast<char>(event.text.unicode);
 		_last_type_time = _elapsed_time;
 	}
@@ -121,12 +125,8 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	target.draw(_enter_your_name_text, states);
 	target.draw(_curr_player_name_text, states);
 	
-	if (!_player_name.empty() && _rank_table.exists(_player_name) && _status == SCORE_SAVED) {
-		sf::Text your_best_score_text(std::string("Best score: ") + std::to_string(_rank_table[_player_name].score), _font, 30.f);
-		auto best_score_text_color = sf::Color(255, 255, 255, _best_score_text_color_animation.cached_val());
-		your_best_score_text.setFillColor(best_score_text_color);
-		your_best_score_text.move(30.f, _best_score_appearence_animation.cached_val() + 30.f);
-		target.draw(your_best_score_text, states);
+	if (_status == SCORE_SAVED && _rank_table.exists(_player_name)) {
+		target.draw(_best_score_text, states);
 	}
 	
 	unsigned int start = std::max(0, signed(_place) - 5);
