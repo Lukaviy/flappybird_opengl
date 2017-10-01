@@ -45,7 +45,7 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 }
 
 void RankTableScene_t::reset() {
-	_status = RESTARTED;
+	_status = START;
 	_animator.reset();
 	_enter_your_name_text.setPosition(30.f, 20.f);
 

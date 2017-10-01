@@ -21,7 +21,6 @@ public:
 
 	enum RankTableSceneStatus_t {
 		START,
-		RESTARTED,
 		TYPING_NAME,
 		SCORE_SAVED,
 		RESTART_REQUESTED,
