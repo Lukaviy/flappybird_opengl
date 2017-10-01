@@ -35,6 +35,10 @@ Rank_t RankTable_t::operator[](std::string player_name) {
 	return *_player_name_to_rank[player_name];
 }
 
+bool RankTable_t::exists(std::string player_name) {
+	return _player_name_to_rank.find(player_name) != _player_name_to_rank.end();
+}
+
 unsigned int RankTable_t::find_place(unsigned int score) {
 	auto pos = std::lower_bound(_ranks.begin(), _ranks.end(), score, [](const Rank_t* a, unsigned int b) { return a->score >= b; });
  	return pos - _ranks.begin();

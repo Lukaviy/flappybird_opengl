@@ -14,6 +14,7 @@ public:
 
 	Rank_t operator[](unsigned int i);
 	Rank_t operator[](std::string player_name);
+	bool exists(std::string player_name);
 	unsigned int find_place(unsigned int score);
 	size_t size() const;
 protected:
