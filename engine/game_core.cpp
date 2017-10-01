@@ -29,7 +29,7 @@ void GameCore_t::step(float dtime, bool flap) {
 		MapElement_t& next_map_element = _map[(_curr_cell + _map.size() - 1) % _map.size()];
 		next_map_element.x_pos = _map[(_curr_cell + _map.size() - 2) % _map.size()].x_pos + _tube_width + _tube_dist;
 		next_map_element.y_pos = -0.7f + (rand() % 160) / 100.f;
-		next_map_element.hole_size = _hole_size + (rand() % 50) / 100.f;
+		next_map_element.hole_size = _hole_size;
 		++_curr_cell;
 	}
 	auto hole = _map[_curr_cell % _map.size()];
