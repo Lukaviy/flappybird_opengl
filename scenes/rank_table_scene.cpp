@@ -26,11 +26,11 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_appearence_background_animation = _animator.make<LinearAnimation_t>(0, 150, 0.5f)
 		.on_stop([this]() { _status = TYPING_NAME; });
 
-	_appearence_text_color_animation = _animator.make<LinearAnimation_t>(0, 255, 0.5f)
-		.start_after(_animator.make<TimerAnimation_t>(0.1f).start_after(_appearence_background_animation));
+	_appearence_text_color_animation = _animator.make<LinearAnimation_t>(0, 255, 0.7f)
+		.start_after(_animator.make<TimerAnimation_t>(0.4f).start_with(_appearence_background_animation));
 
 	_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 30.f, 0.5f)
-		.start_after(_animator.make<TimerAnimation_t>(0.2f).start_after(_appearence_background_animation));
+		.start_after(_animator.make<TimerAnimation_t>(0.4f).start_with(_appearence_background_animation));
 
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f).
@@ -56,7 +56,7 @@ void RankTableScene_t::step(float dt) {
 	_animator.step(dt);
 
 	_background_rect.setFillColor(sf::Color(50, 50, 50, _appearence_background_animation.val()));
-	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val()));
+	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val() + _enter_your_name_text_color_dissapearing.val()));
 	_enter_your_name_text.setPosition(30.f + (_enter_your_name_dissapearing.alive() ? _enter_your_name_dissapearing.val() : 0), 20.f);
 	_curr_player_name_text.setString(
 		_player_name + (_status == TYPING_NAME && 
@@ -97,8 +97,10 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_enter_your_name_dissapearing = _animator.make<LinearAnimation_t>(0, -200.f, 0.5f);
 			_enter_your_name_text_color_dissapearing.start_with(_enter_your_name_dissapearing);
 
-			_best_score_appearence_animation = _animator.make<LinearAnimation_t>(500.f, 50.f + _curr_player_name_text.getLocalBounds().width, 0.5f)
-				.start_with(_enter_your_name_dissapearing);
+			_best_score_appearence_animation = _animator.make<LinearAnimation_t>(
+				_curr_player_name_text.getGlobalBounds().left + _curr_player_name_text.getGlobalBounds().width + 10.f, 
+				50.f + _curr_player_name_text.getLocalBounds().width, 0.5f
+				).start_with(_enter_your_name_dissapearing);
 
 			_enter_your_name_dissapearing.start();
 		}
