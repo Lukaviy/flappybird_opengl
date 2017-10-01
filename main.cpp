@@ -8,7 +8,7 @@ const int map_size = 3;
 const float dist_between_tubes = 0.9f;
 const float tube_width = 0.4f;
 
-GameCore_t<map_size> game_core(1.f, -4.f, 1.3f, dist_between_tubes, tube_width, 0.5f, -2.f, 0.08f, 0.08f);
+GameCore_t game_core(map_size, 1.f, -4.f, 1.3f, dist_between_tubes, tube_width, 0.5f, -2.f, 0.08f, 0.08f);
 #include <SFML/Graphics.hpp>
 
 int main() {
@@ -85,8 +85,8 @@ int main() {
 		auto map = game_core.get_map();
 		int curr_ceil = game_core.get_current_ceil();
 		
-		for (int i = 0; i < map_size; i++) {
-			auto tube = map[(curr_ceil + i) % map_size];
+		for (int i = 0; i < map.size(); i++) {
+			auto tube = map[(curr_ceil + i) % map.size()];
 
 			float hole_size = tube.hole_size;
 			float hole_pos = tube.y_pos;
@@ -111,7 +111,7 @@ int main() {
 		window.setView(gui_view);
 		window.draw(text);
 
-		if (game_core.get_state() == GameCore_t<10>::State_t::DEAD) {
+		if (game_core.get_state() == GameCore_t::State_t::DEAD) {
 			rank_table_scene.set_score(game_core.get_current_ceil());
 			rank_table_scene.step(dtm);
 			window.draw(rank_table_scene);
