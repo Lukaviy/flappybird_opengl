@@ -18,7 +18,7 @@ public:
 		float val();
 		float cached_val() const;
 		void start() const;
-		void start_after(const Pointer_t& pointer) const;
+		const Pointer_t& start_after(const Pointer_t& pointer) const;
 		void stop();
 		bool playing() const;
 		void on_start(std::function<void()> callback) const;

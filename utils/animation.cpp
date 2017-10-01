@@ -89,8 +89,9 @@ void Animation_t::Pointer_t::start() const {
 	_animation->_start();
 }
 
-void Animation_t::Pointer_t::start_after(const Pointer_t& pointer) const {
+const Animation_t::Pointer_t& Animation_t::Pointer_t::start_after(const Pointer_t& pointer) const {
 	_animation->_start_after(pointer._animation);
+	return *this;
 }
 
 void Animation_t::Pointer_t::stop() {
