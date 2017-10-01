@@ -15,7 +15,7 @@ GameCore_t game_core(map_size, 1.f, -4.f, 1.3f, dist_between_tubes, tube_width, 
 #include <SFML/Graphics.hpp>
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Bird");
+	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube");
 
 	sf::Font font;
 	if (!font.loadFromFile("fonts\\machine_c.otf")) {

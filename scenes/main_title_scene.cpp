@@ -7,7 +7,7 @@
 
 MainTitleScene_t::MainTitleScene_t(const sf::Font& font) : 
 	_view(sf::Rect<float>(0.f, 0.f, 1000.f, 1000.f)), _status(SHOWING), 
-	_main_title_text("FLAPPY BIRD", font, 150.f), _press_space_text("Press space to start", font, 40.f)
+	_main_title_text("FLAPPY CUBE", font, 150.f), _press_space_text("Press space to start", font, 40.f)
 {
 	MainTitleScene_t::reset();
 }
