@@ -31,7 +31,7 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_player_name.pop_back();
 			_last_type_time = _elapsed_time;
 		}
-		if (event.key.code == sf::Keyboard::Return) {
+		if (event.key.code == sf::Keyboard::Return && !_player_name.empty()) {
 			_rank_table.save_score(_player_name.c_str(), _score);
 			_status = SCORE_SAVED;
 			_save_score_time = _elapsed_time;
