@@ -2,7 +2,7 @@
 
 struct Rank_t {
 	static const size_t MAX_PLAYER_NAME_LEN = 10;
-	char player_name[MAX_PLAYER_NAME_LEN];
+	char player_name[MAX_PLAYER_NAME_LEN + 1];
 	unsigned int score;
 	Rank_t();
 	Rank_t(const char* player_name, unsigned int score);
