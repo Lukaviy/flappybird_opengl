@@ -1,18 +1,35 @@
-#include <gtc/matrix_transform.hpp>
 #include "engine/game_core.h"
 #include "rank_table/rank_table.h"
 #include "scenes/rank_table_scene.h"
 #include "scenes/game_scene.h"
-#include <iostream>
 #include "scenes/main_title_scene.h"
 #include "rank_table/rank_table_text_file.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
 
+const float x_velocity = 1.f;
+const float y_velocity = -4.f;
+const float y_flap_velocity = 1.5f;
 const int map_size = 3;
 const float dist_between_tubes = 0.9f;
 const float tube_width = 0.4f;
+const float hole_size = 0.5f;
+const float start_pos = -2.f;
+const float bird_height = 0.08f;
+const float birg_width = 0.08f;
 
-GameCore_t game_core(map_size, 1.f, -4.f, 1.3f, dist_between_tubes, tube_width, 0.5f, -2.f, 0.08f, 0.08f);
-#include <SFML/Graphics.hpp>
+GameCore_t game_core(
+	map_size, 
+	x_velocity, 
+	y_velocity, 
+	y_flap_velocity, 
+	dist_between_tubes, 
+	tube_width, 
+	hole_size, 
+	start_pos, 
+	bird_height, 
+	birg_width
+);
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube");
@@ -59,7 +76,7 @@ int main() {
 
 		sf::Time dt = deltaClock.restart();
 		auto dtm = dt.asMilliseconds() / 1000.f;
-		
+
 		window.clear();
 
 		game_scene.step(dtm);
