@@ -38,10 +38,11 @@ void GameCore_t::step(float dtime, bool flap) {
 		_y_pos <= -1 || _y_pos >= 1))
 	{
 		_state = DEAD;
+	} else {
+		_y_velocity = _y_flap_velocity * flap + (_y_velocity + _y_accel * dtime) * !flap;
+		_x_pos += _x_velocity * dtime * !_freeze_x_pos;
+		_y_pos += _y_velocity * dtime;
 	}
-	_y_velocity = _y_flap_velocity * flap + (_y_velocity + _y_accel * dtime) * !flap;
-	_x_pos += _x_velocity * dtime * !_freeze_x_pos;
-	_y_pos += _y_velocity * dtime;
 }
 
 void GameCore_t::reset() {
