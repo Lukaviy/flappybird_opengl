@@ -13,5 +13,3 @@ struct Rank_t {
 		bool operator()(Rank_t const &a, Rank_t const &b) const { return a.score > b.score; }
 	};
 };
-
-

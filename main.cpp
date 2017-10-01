@@ -1,12 +1,11 @@
 #include <gtc/matrix_transform.hpp>
 #include "engine/game_core.h"
 #include "rank_table/rank_table.h"
-#include "rank_table/rank_table_db_text_file.h"
 #include "scenes/rank_table_scene.h"
-#include <stack>
 #include "scenes/game_scene.h"
 #include <iostream>
 #include "scenes/main_title_scene.h"
+#include "rank_table/rank_table_text_file.h"
 
 const int map_size = 3;
 const float dist_between_tubes = 0.9f;
@@ -30,9 +29,7 @@ int main() {
 	sf::Clock deltaClock;
 	deltaClock.restart();
 
-	RankTableTextFileDb_t rank_table_db("scores.txt");
-
-	RankTable_t rank_table(rank_table_db);
+	RankTableTextFile_t rank_table("scores.txt");
 	try {
 		rank_table.load_ranks();
 	} catch(RankTableException_t) {

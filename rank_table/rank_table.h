@@ -1,21 +1,22 @@
 #pragma once
 #include <vector>
 #include "rank.h"
-#include "rank_table_db.h"
+#include <unordered_map>
 
 class RankTableException_t {};
 class BadPlayerNameException_t {};
 
 class RankTable_t {
 public:
-	RankTable_t(RankTableDb_t& rank_table_db);
-
-	~RankTable_t() = default;
-	void save_score(const char* player_name, unsigned int score);
+	virtual ~RankTable_t();
+	virtual void save_score(const char* player_name, unsigned int score);
+	virtual void load_ranks();
 
 	Rank_t operator[](unsigned int i);
+	Rank_t operator[](std::string player_name);
+	unsigned int find_place(unsigned int score);
 	size_t size() const;
 protected:
-	std::vector<Rank_t> _ranks;
-	RankTableDb_t& _rank_table_db;
+	std::unordered_map<std::string, Rank_t*> _player_name_to_rank;
+	std::vector<Rank_t*> _ranks;
 };
