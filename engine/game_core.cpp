@@ -1,11 +1,11 @@
 #include "game_core.h"
 
 GameCore_t::GameCore_t(
-	size_t map_size, float x_velocity, float y_accel, float y_flap_accel, float tube_dist, float tube_width, 
+	size_t map_size, float x_velocity, float y_accel, float y_flap_velocity, float tube_dist, float tube_width, 
 	float hole_size, float start_pos, float bird_heiht, float bird_width) :
 
 	_x_pos(start_pos), _y_pos(0.5), _x_velocity(x_velocity), _y_velocity(0), 
-	_y_accel(y_accel), _y_flap_accel(y_flap_accel), _tube_dist(tube_dist), _tube_width(tube_width),
+	_y_accel(y_accel), _y_flap_velocity(y_flap_velocity), _tube_dist(tube_dist), _tube_width(tube_width),
 	_curr_cell(0), _bird_height(bird_heiht), _bird_width(bird_width), _hole_size(hole_size), 
 	_start_pos(start_pos), _state(PLAYING), _map(map_size), _freeze_x_pos(false)
 {
@@ -39,12 +39,7 @@ void GameCore_t::step(float dtime, bool flap) {
 	{
 		_state = DEAD;
 	}
-	if (flap) {
-		_y_velocity = _y_flap_accel;
-	}
-	else {
-		_y_velocity += _y_accel * dtime;
-	}
+	_y_velocity = _y_flap_velocity * flap + (_y_velocity + _y_accel * dtime) * !flap;
 	_x_pos += _x_velocity * dtime * !_freeze_x_pos;
 	_y_pos += _y_velocity * dtime;
 }

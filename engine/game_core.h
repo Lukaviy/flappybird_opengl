@@ -38,7 +38,7 @@ private:
 	float _x_velocity;
 	float _y_velocity;
 	float _y_accel;
-	float _y_flap_accel;
+	float _y_flap_velocity;
 	float _tube_dist;
 	float _tube_width;
 	int _curr_cell;
