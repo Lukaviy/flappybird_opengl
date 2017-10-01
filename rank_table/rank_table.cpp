@@ -16,7 +16,7 @@ void RankTable_t::save_score(const char* player_name, unsigned int score) {
 		finded_rank->second->score = std::max(finded_rank->second->score, score);
 		sort(_ranks.begin(), _ranks.end(), [](const Rank_t* a, const Rank_t* b) { return a->score > b->score; });
 	} else {
-		auto place = find_place(score);
+		unsigned int place = find_place(score);
 		_ranks.insert(_ranks.begin() + place, rank);
 		_player_name_to_rank[player_name] = rank;
 	}
@@ -41,7 +41,10 @@ bool RankTable_t::exists(std::string player_name) {
 }
 
 unsigned int RankTable_t::find_place(unsigned int score) {
-	auto pos = std::lower_bound(_ranks.begin(), _ranks.end(), score, [](const Rank_t* a, unsigned int b) { return a->score >= b; });
+	auto pos = std::lower_bound(_ranks.begin(), _ranks.end(), score, [](const Rank_t* a, unsigned int b)
+	{
+		return a->score >= b;
+	});
  	return pos - _ranks.begin();
 }
 
