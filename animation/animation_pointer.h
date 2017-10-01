@@ -15,6 +15,7 @@ public:
 	float cached_val() const;
 	void start() const;
 	const AnimPointer_t& start_after(const AnimPointer_t& pointer) const;
+	const AnimPointer_t& start_with(const AnimPointer_t& pointer) const;
 	void stop();
 	bool playing() const;
 	const AnimPointer_t& on_start(std::function<void()> callback) const;

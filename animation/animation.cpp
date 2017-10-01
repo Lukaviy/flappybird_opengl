@@ -4,7 +4,7 @@
 Animation_t::Animation_t() : _val(0), _playing(false) {}
 
 Animation_t::~Animation_t() {
-	for (auto animation : _child_animations) {
+	for (auto animation : _start_after_animations) {
 		animation->_start();
 	}
 	for (auto pointer : _pointers) {
@@ -22,8 +22,15 @@ void Animation_t::_start() {
 	for (auto callback : _on_start_callbacks) {
 		callback();
 	}
+	for (auto animation : _start_with_animations) {
+		animation->_start();
+	}
 }
 
 void Animation_t::_start_after(Animation_t* animation) {
-	animation->_child_animations.push_back(this);
+	animation->_start_after_animations.push_back(this);
+}
+
+void Animation_t::_start_with(Animation_t* animation) {
+	animation->_start_with_animations.push_back(this);
 }

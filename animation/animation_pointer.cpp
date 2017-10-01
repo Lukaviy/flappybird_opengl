@@ -50,6 +50,11 @@ const AnimPointer_t& AnimPointer_t::start_after(const AnimPointer_t& pointer) co
 	return *this;
 }
 
+const AnimPointer_t& AnimPointer_t::start_with(const AnimPointer_t& pointer) const {
+	_animation->_start_with(pointer._animation);
+	return *this;
+}
+
 void AnimPointer_t::stop() {
 	delete _animation;
 	_animation = nullptr;
