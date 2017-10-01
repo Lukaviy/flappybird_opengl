@@ -101,8 +101,7 @@ void RankTableScene_t::send_event(sf::Event event) {
 
 			_enter_your_name_dissapearing.start();
 		}
-	}
-	if (_status == SCORE_SAVED && event.key.code == sf::Keyboard::Space) {
+	} else if (_status == SCORE_SAVED && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 		_status = RESTART_REQUESTED;
 	}
 }
