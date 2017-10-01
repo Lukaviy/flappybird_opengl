@@ -30,7 +30,7 @@ void GameScene_t::step(float dt) {
 }
 
 void GameScene_t::send_event(sf::Event event) {
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+	if (_state == PLAYING && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 		_flap = true;
 	}
 }
@@ -46,6 +46,7 @@ void GameScene_t::set_font(sf::Font font) {
 
 void GameScene_t::start() {
 	_game_core.freeze_x_pos(false);
+	_flap = true;
 	_state = PLAYING;
 }
 
