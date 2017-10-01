@@ -7,9 +7,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-const float x_velocity = 1.f;
-const float y_velocity = -4.f;
-const float y_flap_velocity = 1.5f;
+const float x_velocity = 0.9f;
+const float y_velocity = -6.f;
+const float y_flap_velocity = 2.f;
 const int map_size = 3;
 const float dist_between_tubes = 0.9f;
 const float tube_width = 0.4f;
