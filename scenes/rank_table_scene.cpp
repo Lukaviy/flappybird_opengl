@@ -140,22 +140,23 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	if (_status == SCORE_SAVED && _rank_table.exists(_player_name)) {
 		target.draw(_best_score_text, states);
 	}
+	static unsigned const int list_size = 10;
 	unsigned int start = 0;
 	unsigned int end = 0;
-	if (_place <= 5) {
+	if (_place <= list_size / 2) {
 		start = 0;
-		end = std::min(unsigned(10), _rank_table.size());
-	} else if (_place >= _rank_table.size() - 5) {
-		if (_rank_table.size() < 10) {
+		end = std::min(list_size, _rank_table.size());
+	} else if (_place >= _rank_table.size() - list_size / 2) {
+		if (_rank_table.size() < list_size) {
 			start = 0;
 			end = _rank_table.size();
 		} else {
-			start = _rank_table.size() - 11;
+			start = _rank_table.size() - list_size - 1;
 			end = _rank_table.size() - 1;
 		}
 	} else {
-		start = _place - 5;
-		end = _place + 5;
+		start = _place - list_size / 2;
+		end = _place + (list_size - list_size / 2);
 	}
 
  	for (int i = start; i < end; i++) {
