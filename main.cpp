@@ -3,7 +3,10 @@
 #include "rank_table/rank_table.h"
 #include "rank_table/rank_table_db_text_file.h"
 #include "scenes/rank_table_scene.h"
+#include <stack>
 #include "scenes/game_scene.h"
+#include <iostream>
+#include "scenes/main_title_scene.h"
 
 const int map_size = 3;
 const float dist_between_tubes = 0.9f;
@@ -16,8 +19,10 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Bird");
 
 	sf::Font font;
-	if (!font.loadFromFile("fonts\\machine_c.otf"))
+	if (!font.loadFromFile("fonts\\machine_c.otf")) {
+		std::cout << "Can't open \"fonts\\machine_c.otf\" file" << std::endl;
 		return EXIT_FAILURE;
+	}
 
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
@@ -37,19 +42,19 @@ int main() {
 	GameScene_t game_scene(game_core);
 	game_scene.set_font(font);
 
-	while (window.isOpen()) {
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-			rank_table_scene.reset();
-			game_scene.reset();
-		}
+	MainTitleScene_t main_title_scene;
+	main_title_scene.set_font(font);
 
+	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed) {
 				window.close();
+			}
 
 			rank_table_scene.send_event(event);
 			game_scene.send_event(event);
+			main_title_scene.send_event(event);
 		}
 
 		sf::Time dt = deltaClock.restart();
@@ -60,10 +65,24 @@ int main() {
 		game_scene.step(dtm);
 		window.draw(game_scene);
 
-		if (game_core.get_state() == GameCore_t::State_t::DEAD) {
+		if (main_title_scene.get_state() == MainTitleScene_t::STARTED) {
+			if (game_scene.get_state() == GameScene_t::WAIT) {
+				game_scene.start();
+			}
+		} else {
+			main_title_scene.step(dtm);
+			window.draw(main_title_scene);
+		}
+
+		if (game_scene.get_state() == GameScene_t::DEAD) {
 			rank_table_scene.set_score(game_core.get_current_ceil());
 			rank_table_scene.step(dtm);
 			window.draw(rank_table_scene);
+
+			if (rank_table_scene.get_state() == RankTableScene_t::SCORE_SAVED && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				rank_table_scene.reset();
+				game_scene.reset();
+			}
 		}
 
 		window.display();

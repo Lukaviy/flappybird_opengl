@@ -1,8 +1,13 @@
 #include "game_core.h"
 
-GameCore_t::GameCore_t(size_t map_size, float x_velocity, float y_accel, float y_flap_accel, float tube_dist, float tube_width, float hole_size, float start_pos, float bird_heiht, float bird_width)
-	: _x_pos(start_pos), _y_pos(0.5), _x_velocity(x_velocity), _y_velocity(0), _y_accel(y_accel), _y_flap_accel(y_flap_accel), _tube_dist(tube_dist), _tube_width(tube_width),
-	_curr_cell(0), _bird_height(bird_heiht), _bird_width(bird_width), _hole_size(hole_size), _start_pos(start_pos), _state(PLAYING), _map(map_size)
+GameCore_t::GameCore_t(
+	size_t map_size, float x_velocity, float y_accel, float y_flap_accel, float tube_dist, float tube_width, 
+	float hole_size, float start_pos, float bird_heiht, float bird_width) :
+
+	_x_pos(start_pos), _y_pos(0.5), _x_velocity(x_velocity), _y_velocity(0), 
+	_y_accel(y_accel), _y_flap_accel(y_flap_accel), _tube_dist(tube_dist), _tube_width(tube_width),
+	_curr_cell(0), _bird_height(bird_heiht), _bird_width(bird_width), _hole_size(hole_size), 
+	_start_pos(start_pos), _state(PLAYING), _map(map_size), _freeze_x_pos(false)
 {
 	for (int i = 0; i < map_size; i++) {
 		_map[i].y_pos = -0.6f + i * 1.f / map_size * 1.8f;
@@ -40,7 +45,7 @@ void GameCore_t::step(float dtime, bool flap) {
 	else {
 		_y_velocity += _y_accel * dtime;
 	}
-	_x_pos += _x_velocity * dtime;
+	_x_pos += _x_velocity * dtime * !_freeze_x_pos;
 	_y_pos += _y_velocity * dtime;
 }
 
@@ -69,6 +74,10 @@ int GameCore_t::get_current_ceil() const {
 
 GameCore_t::State_t GameCore_t::get_state() const {
 	return _state;
+}
+
+void GameCore_t::freeze_x_pos(bool freeze) {
+	_freeze_x_pos = freeze;
 }
 
 const std::vector<GameCore_t::MapElement_t>& GameCore_t::get_map() const {

@@ -29,6 +29,7 @@ public:
 	Vec_t get_bird_velocity() const;
 	int get_current_ceil() const;
 	State_t get_state() const;
+	void freeze_x_pos(bool freeze);
 
 	const std::vector<MapElement_t>& get_map() const;
 private:
@@ -47,4 +48,5 @@ private:
 	float _start_pos;
 	State_t _state;
 	std::vector<MapElement_t> _map;
+	bool _freeze_x_pos;
 };

@@ -12,11 +12,22 @@ public:
 	void send_event(sf::Event event) override;
 	void reset() override;
 	void set_font(sf::Font font);
+	void start();
+
+	enum GameSceneState_t {
+		WAIT,
+		PLAYING,
+		DEAD
+	};
+
+	GameSceneState_t get_state() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	GameCore_t& _game_core;
 	bool _flap;
+	GameSceneState_t _state;
+	float _elapsed_time;
 
 	sf::RectangleShape _bird_shape;
 	sf::RectangleShape _up_tube_shape;

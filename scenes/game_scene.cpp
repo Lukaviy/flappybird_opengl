@@ -7,7 +7,8 @@ const float tube_width = 0.4f;
 GameScene_t::GameScene_t(GameCore_t& game_core) :
 	_game_core(game_core), _flap(false), _bird_shape(sf::Vector2<float>(0.1f, 0.1f)),
 	_up_tube_shape(sf::Vector2<float>(tube_width, 2.f)), _bottom_tube_shape(sf::Vector2<float>(tube_width, 2.f)),
-	_game_view(sf::FloatRect(-1.f, 1.f, 2.f, -2.f)), _gui_view(sf::FloatRect(0.f, 0.f, 500.f, 500.f))
+	_game_view(sf::FloatRect(-1.f, 1.f, 2.f, -2.f)), _gui_view(sf::FloatRect(0.f, 0.f, 500.f, 500.f)),
+	_state(WAIT), _elapsed_time(0)
 {
 	_bird_shape.setFillColor(sf::Color::Red);
 	_up_tube_shape.setFillColor(sf::Color::Green);
@@ -15,11 +16,17 @@ GameScene_t::GameScene_t(GameCore_t& game_core) :
 	_bird_shape.move(-0.05f, -0.05f);
 	_up_tube_shape.move(-tube_width / 2.f, 0.f);
 	_bottom_tube_shape.move(-tube_width / 2.f, -2.f);
+
+	_game_core.freeze_x_pos(true);
 }
 
 void GameScene_t::step(float dt) {
-	_game_core.step(dt, _flap);
+	_game_core.step(dt, _flap || _state == WAIT && _game_core.get_bird_pos().y < 0);
 	_flap = false;
+	if (_game_core.get_state() == GameCore_t::DEAD) {
+		_state = DEAD;
+	}
+	_elapsed_time += dt * (_state == PLAYING);
 }
 
 void GameScene_t::send_event(sf::Event event) {
@@ -30,10 +37,20 @@ void GameScene_t::send_event(sf::Event event) {
 
 void GameScene_t::reset() {
 	_game_core.reset();
+	_state = PLAYING;
 }
 
 void GameScene_t::set_font(sf::Font font) {
 	_font = font;
+}
+
+void GameScene_t::start() {
+	_game_core.freeze_x_pos(false);
+	_state = PLAYING;
+}
+
+GameScene_t::GameSceneState_t GameScene_t::get_state() const {
+	return _state;
 }
 
 void GameScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -74,11 +91,14 @@ void GameScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 
 	target.draw(_bird_shape, t3);
 
-	sf::Text text(std::to_string(_game_core.get_current_ceil()), _font, 50.f);
-	text.setFillColor(sf::Color::White);
-	text.setOutlineColor(sf::Color::Black);
-	text.move(250.f, 20.f);
+	if (_state != WAIT) {
+		sf::Text text(std::to_string(_game_core.get_current_ceil()), _font, 50.f);
+		text.setFillColor(sf::Color(255, 255, 255, std::min(1.f, _elapsed_time) * 255));
+		text.setOutlineColor(sf::Color::Black);
+		text.move(240.f, 20.f);
 
-	target.setView(_gui_view);
-	target.draw(text);
+		target.setView(_gui_view);
+		target.draw(text);
+	}
+
 }
