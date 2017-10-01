@@ -14,8 +14,8 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 }
 
 void MainTitleScene_t::reset() {
-	_title_appearence_animation = Animation_t::make<LinearAnimation_t>(0, 255, 3);
-	_press_space_animation = Animation_t::make<SinAnimation_t>(0, 255, 5, -M_PI_2);
+	_title_appearence_animation = _animator.make<LinearAnimation_t>(0, 255, 3);
+	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 	_press_space_animation.start_after(_title_appearence_animation);
 	_title_appearence_animation.on_stop([this]() { _status = WAIT_FOR_START; });
 	_title_appearence_animation.start();
@@ -50,6 +50,8 @@ void MainTitleScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 }
 
 void MainTitleScene_t::step(float dt) {
+	_animator.step(dt);
+
 	_main_title_text.setFillColor(sf::Color(255, 255, 255, _title_appearence_animation.val()));
 
 	if (_press_space_animation.playing()) {

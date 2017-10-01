@@ -1,8 +1,9 @@
 #pragma once
 #include "scene.h"
+#include "../utils/animation.h"
+#include "../utils/animator.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/View.hpp>
-#include "../utils/animation.h"
 #include <SFML/Graphics/Text.hpp>
 
 class MainTitleScene_t : public Scene_t {
@@ -23,12 +24,14 @@ public:
 	MainTitleSceneStatus_t get_state() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	Animator_t _animator;
+
 	sf::View _view;
 
 	MainTitleSceneStatus_t _status;
 
-	Animation_t::Pointer_t _title_appearence_animation;
-	Animation_t::Pointer_t _press_space_animation;
+	AnimPointer_t _title_appearence_animation;
+	AnimPointer_t _press_space_animation;
 	sf::Text _main_title_text;
 	sf::Text _press_space_text;
 };

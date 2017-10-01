@@ -36,10 +36,9 @@ int main() {
 		std::cout << "Can't load ranks" << std::endl;
 	}
 
-	RankTableScene_t rank_table_scene(rank_table);
+	RankTableScene_t rank_table_scene(rank_table, font);
 	rank_table_scene.set_size(sf::Vector2f(400, 300));
 	rank_table_scene.move(50, 150);
-	rank_table_scene.set_font(font);
 
 	GameScene_t game_scene(game_core);
 	game_scene.set_font(font);
@@ -57,8 +56,6 @@ int main() {
 			game_scene.send_event(event);
 			main_title_scene.send_event(event);
 		}
-
-		Animation_t::step();
 
 		sf::Time dt = deltaClock.restart();
 		auto dtm = dt.asMilliseconds() / 1000.f;
