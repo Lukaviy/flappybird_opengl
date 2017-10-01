@@ -28,7 +28,7 @@ void GameCore_t::step(float dtime, bool flap) {
 	if (_map[_curr_cell % _map.size()].x_pos + _tube_width / 2 <= _x_pos - _bird_width / 2) {
 		MapElement_t& next_map_element = _map[(_curr_cell + _map.size() - 1) % _map.size()];
 		next_map_element.x_pos = _map[(_curr_cell + _map.size() - 2) % _map.size()].x_pos + _tube_width + _tube_dist;
-		next_map_element.y_pos = -0.7f + (rand() % 160) / 100.f;
+		next_map_element.y_pos = -1.f + _hole_size / 2.f + 0.1f + (rand() % 100) / 100.f * (2.f - _hole_size - 0.2f);
 		next_map_element.hole_size = _hole_size;
 		++_curr_cell;
 	}
