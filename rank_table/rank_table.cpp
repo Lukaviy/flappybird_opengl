@@ -15,7 +15,6 @@ void RankTable_t::save_score(const char* player_name, unsigned int score) {
 	if (finded_rank != _player_name_to_rank.end()) {
 		finded_rank->second->score = std::max(finded_rank->second->score, score);
 	} else {
-		_ranks.push_back(rank);
 		auto place = find_place(score);
 		_ranks.insert(_ranks.begin() + place, rank);
 		_player_name_to_rank[player_name] = rank;
