@@ -17,8 +17,8 @@ public:
 	const AnimPointer_t& start_after(const AnimPointer_t& pointer) const;
 	void stop();
 	bool playing() const;
-	void on_start(std::function<void()> callback) const;
-	void on_stop(std::function<void()> callback) const;
+	const AnimPointer_t& on_start(std::function<void()> callback) const;
+	const AnimPointer_t& on_stop(std::function<void()> callback) const;
 protected:
 	AnimPointer_t(Animation_t* animation);
 

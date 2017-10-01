@@ -60,14 +60,16 @@ bool AnimPointer_t::playing() const {
 	return _alive && _animation->_playing;
 }
 
-void AnimPointer_t::on_start(std::function<void()> callback) const {
+const AnimPointer_t& AnimPointer_t::on_start(std::function<void()> callback) const {
 	if (_alive) {
 		_animation->_on_start_callbacks.push_back(callback);
 	}
+	return *this;
 }
 
-void AnimPointer_t::on_stop(std::function<void()> callback) const {
+const AnimPointer_t& AnimPointer_t::on_stop(std::function<void()> callback) const {
 	if (_alive) {
 		_animation->_on_stop_callbacks.push_back(callback);
 	}
+	return *this;
 }
