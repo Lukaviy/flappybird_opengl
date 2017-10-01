@@ -79,8 +79,9 @@ void RankTableScene_t::send_event(sf::Event event) {
 	if (_status == TYPING_NAME && event.type == sf::Event::TextEntered && (
 		event.text.unicode >= 'a' && event.text.unicode <= 'z' ||
 		event.text.unicode >= 'A' && event.text.unicode <= 'Z' ||
-		event.text.unicode >= '0' && event.text.unicode <= '9'
-	)) {
+		event.text.unicode >= '0' && event.text.unicode <= '9') &&
+		_player_name.size() < Rank_t::MAX_PLAYER_NAME_LEN
+	) {
 		_player_name += static_cast<char>(event.text.unicode);
 		_last_type_time = _animator.elapsed_time();
 	}
