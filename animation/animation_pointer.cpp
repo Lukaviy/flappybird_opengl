@@ -48,19 +48,29 @@ void AnimPointer_t::start() const {
 }
 
 const AnimPointer_t& AnimPointer_t::start_after(const AnimPointer_t& pointer) const {
-	_animation->_start_after(pointer._animation);
+	if (!pointer._alive) {
+		start();
+	} else {
+		_animation->_start_after(pointer._animation);
+	}
 	return *this;
 }
 
 const AnimPointer_t& AnimPointer_t::start_with(const AnimPointer_t& pointer) const {
-	_animation->_start_with(pointer._animation);
+	if (!pointer._alive) {
+		start();
+	} else {
+		_animation->_start_with(pointer._animation);
+	}
 	return *this;
 }
 
 void AnimPointer_t::stop() {
-	delete _animation;
-	_animation = nullptr;
-	_alive = false;
+	if (_alive) {
+		delete _animation;
+		_animation = nullptr;
+		_alive = false;
+	}
 }
 
 bool AnimPointer_t::playing() const {
