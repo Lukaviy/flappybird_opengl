@@ -74,7 +74,11 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	enter_your_name_text.setFillColor(enter_your_name_text_color);
 	target.draw(enter_your_name_text, states);
 
-	sf::Text curr_player_name_text(_player_name + (int(floor(_elapsed_time)) & 1 && _elapsed_time - _last_type_time > 1 ? "|" : ""), _font, 30.f);
+	sf::Text curr_player_name_text(
+		_player_name + (_status == TYPING_NAME && int(floor(_elapsed_time * 2.f)) & 1 && _elapsed_time - _last_type_time > 0.5f ? "|" : ""),
+		_font, 
+		30.f
+	);
 	curr_player_name_text.setFillColor(enter_your_name_text_color);
 	curr_player_name_text.move(230.f, 20.f);
 	target.draw(curr_player_name_text, states);
