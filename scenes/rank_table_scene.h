@@ -24,6 +24,7 @@ public:
 		RESTARTED,
 		TYPING_NAME,
 		SCORE_SAVED,
+		RESTART_REQUESTED,
 	};
 
 	RankTableSceneStatus_t get_state() const;

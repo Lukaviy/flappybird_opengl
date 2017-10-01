@@ -79,7 +79,7 @@ int main() {
 			rank_table_scene.step(dtm);
 			window.draw(rank_table_scene);
 
-			if (rank_table_scene.get_state() == RankTableScene_t::SCORE_SAVED && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			if (rank_table_scene.get_state() == RankTableScene_t::RESTART_REQUESTED) {
 				rank_table_scene.reset();
 				game_scene.reset();
 			}

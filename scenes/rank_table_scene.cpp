@@ -93,6 +93,9 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_press_space_animation.start();
 		}
 	}
+	if (_status == SCORE_SAVED && event.key.code == sf::Keyboard::Space) {
+		_status = RESTART_REQUESTED;
+	}
 }
 
 void RankTableScene_t::set_size(sf::Vector2f size) {
