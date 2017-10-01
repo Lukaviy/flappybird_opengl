@@ -55,6 +55,8 @@ protected:
 	AnimPointer_t _press_space_animation;
 	AnimPointer_t _best_score_appearence_animation;
 	AnimPointer_t _best_score_text_color_animation;
+	AnimPointer_t _enter_your_name_dissapearing;
+	AnimPointer_t _enter_your_name_text_color_dissapearing;
 
 	std::string _player_name;
 	unsigned int _score;
