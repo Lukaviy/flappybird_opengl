@@ -58,7 +58,6 @@ protected:
 	std::string _player_name;
 	unsigned int _score;
 	unsigned int _place;
-	float _elapsed_time;
 	float _last_type_time;
 	float _save_score_time;
 	RankTableSceneStatus_t _status;

@@ -10,7 +10,7 @@
 #include "../animation/starter_animation.h"
 
 RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) : 
-	_rank_table(rank_table), _score(0), _elapsed_time(0), _last_type_time(0), _status(START),
+	_rank_table(rank_table), _score(0), _last_type_time(0), _status(START),
 	_view(sf::Rect<float>(0.f, 0.f, 500.f, 500.f)), _save_score_time(0), _place(0), _font(font)
 {
 	_enter_your_name_text = sf::Text("Enter your name: ", _font, 30);
@@ -57,7 +57,8 @@ void RankTableScene_t::step(float dt) {
 	auto enter_your_name_text_color = sf::Color(255, 255, 255, _appearence_text_color_animation.val());
 	_enter_your_name_text.setFillColor(enter_your_name_text_color);
 	_curr_player_name_text.setString(
-		_player_name + (_status == TYPING_NAME && int(floor(_elapsed_time * 2.f)) & 1 && _elapsed_time - _last_type_time > 0.5f ? "|" : "")
+		_player_name + (_status == TYPING_NAME && 
+			int(floor(_animator.elapsed_time() * 2.f)) & 1 && _animator.elapsed_time() - _last_type_time > 0.5f ? "|" : "")
 	);
 	_curr_player_name_text.setFillColor(enter_your_name_text_color);
 	_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
@@ -78,12 +79,12 @@ void RankTableScene_t::send_event(sf::Event event) {
 		event.text.unicode >= '0' && event.text.unicode <= '9'
 	)) {
 		_player_name += static_cast<char>(event.text.unicode);
-		_last_type_time = _elapsed_time;
+		_last_type_time = _animator.elapsed_time();
 	}
 	if (_status == TYPING_NAME && event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::BackSpace && _player_name.size() > 0) {
 			_player_name.pop_back();
-			_last_type_time = _elapsed_time;
+			_last_type_time = _animator.elapsed_time();
 		}
 		if (event.key.code == sf::Keyboard::Return && !_player_name.empty()) {
 			_rank_table.save_score(_player_name.c_str(), _score);
