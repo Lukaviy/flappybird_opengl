@@ -2,14 +2,16 @@
 #include "scene.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/View.hpp>
+#include "../utils/animation.h"
+#include <SFML/Graphics/Text.hpp>
 
 class MainTitleScene_t : public Scene_t {
 public:
-	MainTitleScene_t();
-	void step(float dt) override;
+	MainTitleScene_t(const sf::Font& font);
 	void reset() override;
-	void set_font(sf::Font font);
+	void set_font(const sf::Font& font);
 	void send_event(sf::Event event) override;
+	void step(float dt) override;
 	~MainTitleScene_t() override = default;
 
 	enum MainTitleSceneStatus_t {
@@ -21,10 +23,12 @@ public:
 	MainTitleSceneStatus_t get_state() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-	sf::Font _font;
 	sf::View _view;
 
-	float _elapsed_time;
 	MainTitleSceneStatus_t _status;
+
+	Animation_t::Pointer_t _title_appearence_animation;
+	Animation_t::Pointer_t _press_space_animation;
+	sf::Text _main_title_text;
+	sf::Text _press_space_text;
 };

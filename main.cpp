@@ -44,8 +44,7 @@ int main() {
 	GameScene_t game_scene(game_core);
 	game_scene.set_font(font);
 
-	MainTitleScene_t main_title_scene;
-	main_title_scene.set_font(font);
+	MainTitleScene_t main_title_scene(font);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -58,6 +57,8 @@ int main() {
 			game_scene.send_event(event);
 			main_title_scene.send_event(event);
 		}
+
+		Animation_t::step();
 
 		sf::Time dt = deltaClock.restart();
 		auto dtm = dt.asMilliseconds() / 1000.f;
