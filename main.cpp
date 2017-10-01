@@ -32,7 +32,7 @@ GameCore_t game_core(
 );
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube");
+	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube", sf::Style::Titlebar | sf::Style::Close);
 
 	sf::Font font;
 	if (!font.loadFromFile("fonts\\machine_c.otf")) {
