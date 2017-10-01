@@ -3,10 +3,11 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <corecrt_math_defines.h>
 
 RankTableScene_t::RankTableScene_t(RankTable_t& rank_table) : 
 	_rank_table(rank_table), _score(0), _elapsed_time(0), _last_type_time(0), _status(START),
-	_view(sf::Rect<float>(0.f, 0.f, 500.f, 500.f)) {}
+	_view(sf::Rect<float>(0.f, 0.f, 500.f, 500.f)), _save_score_time(0) {}
 
 void RankTableScene_t::step(float dt) {
 	_elapsed_time += dt;
@@ -17,11 +18,11 @@ void RankTableScene_t::step(float dt) {
 }
 
 void RankTableScene_t::send_event(sf::Event event) {
-	if (event.type == sf::Event::TextEntered && event.text.unicode < 128 && event.text.unicode >= 48) {
+	if (_status == TYPING_NAME && event.type == sf::Event::TextEntered && event.text.unicode < 128 && event.text.unicode >= 48) {
 		_player_name += static_cast<char>(event.text.unicode);
 		_last_type_time = _elapsed_time;
 	}
-	if (event.type == sf::Event::KeyPressed && _elapsed_time > 2.f) {
+	if (_status == TYPING_NAME && event.type == sf::Event::KeyPressed && _elapsed_time > 2.f) {
 		if (event.key.code == sf::Keyboard::BackSpace && _player_name.size() > 0) {
 			_player_name.pop_back();
 			_last_type_time = _elapsed_time;
@@ -29,6 +30,7 @@ void RankTableScene_t::send_event(sf::Event event) {
 		if (event.key.code == sf::Keyboard::Return) {
 			_rank_table.save_score(_player_name.c_str(), _score);
 			_status = SCORE_SAVED;
+			_save_score_time = _elapsed_time;
 		}
 	}
 }
@@ -88,5 +90,12 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 		player_name_text.setString(std::to_string(_rank_table[i].score));
 		player_name_text.move(100.f + std::min(0.5f, std::max(0.f, _elapsed_time - 0.5f)) * 2.f * 30.f, 0);
 		target.draw(player_name_text, states);
+	}
+
+	if (_status == SCORE_SAVED && _elapsed_time > 1.f) {
+		sf::Text press_space_text("Press space to restart", _font, 20.f);
+		press_space_text.setFillColor(sf::Color(255, 255, 255, (sin((_elapsed_time - _save_score_time) * 4.f - M_PI_2) + 1) / 2.f * 255));
+		press_space_text.move(40.f, 460.f);
+		target.draw(press_space_text);
 	}
 }

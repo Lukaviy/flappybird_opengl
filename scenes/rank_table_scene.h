@@ -40,5 +40,6 @@ protected:
 	unsigned int _score;
 	float _elapsed_time;
 	float _last_type_time;
+	float _save_score_time;
 	RankTableSceneStatus_t _status;
 };
