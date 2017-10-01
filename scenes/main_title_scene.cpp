@@ -2,9 +2,8 @@
 #include <SFML/Graphics.hpp>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "../utils/animation.h"
-#include "../utils/linear_animation.h"
-#include "../utils/sin_animation.h"
+#include "../animation/linear_animation.h"
+#include "../animation/sin_animation.h"
 
 MainTitleScene_t::MainTitleScene_t(const sf::Font& font) : 
 	_view(sf::Rect<float>(0.f, 0.f, 1000.f, 1000.f)), _status(SHOWING), 

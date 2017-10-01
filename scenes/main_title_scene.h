@@ -1,7 +1,6 @@
 #pragma once
 #include "scene.h"
-#include "../utils/animation.h"
-#include "../utils/animator.h"
+#include "../animation/animator.h"
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Text.hpp>
