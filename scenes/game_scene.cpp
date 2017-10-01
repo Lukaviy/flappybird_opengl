@@ -10,9 +10,9 @@ GameScene_t::GameScene_t(GameCore_t& game_core) :
 	_game_view(sf::FloatRect(-1.f, 1.f, 2.f, -2.f)), _gui_view(sf::FloatRect(0.f, 0.f, 500.f, 500.f)),
 	_state(WAIT), _elapsed_time(0)
 {
-	_bird_shape.setFillColor(sf::Color::Red);
-	_up_tube_shape.setFillColor(sf::Color::Green);
-	_bottom_tube_shape.setFillColor(sf::Color::Green);
+	_bird_shape.setFillColor(sf::Color(209, 52, 52));
+	_up_tube_shape.setFillColor(sf::Color(79, 227, 141));
+	_bottom_tube_shape.setFillColor(sf::Color(79, 227, 141));
 	_bird_shape.move(-0.05f, -0.05f);
 	_up_tube_shape.move(-tube_width / 2.f, 0.f);
 	_bottom_tube_shape.move(-tube_width / 2.f, -2.f);
