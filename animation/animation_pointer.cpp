@@ -17,7 +17,9 @@ AnimPointer_t::AnimPointer_t(const AnimPointer_t& pointer) :
 }
 
 AnimPointer_t& AnimPointer_t::operator=(const AnimPointer_t& pointer) {
-	_iter_to_this = pointer._animation->_pointers.insert(pointer._animation->_pointers.end(), this);
+	if (pointer._alive) {
+		_iter_to_this = pointer._animation->_pointers.insert(pointer._animation->_pointers.end(), this);
+	}
 	_val = 0;
 	_alive = pointer._alive;
 	_animation = pointer._animation;
