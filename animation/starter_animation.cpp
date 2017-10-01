@@ -1,5 +1,5 @@
 #include "starter_animation.h"
 
-bool StarterAnimation_t::_step(float time) {
-	return true;
+void StarterAnimation_t::_step(float time) {
+	_state = PLAYED;
 }

@@ -10,17 +10,19 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 	_main_title_text("FLAPPY CUBE", font, 150.f), _press_space_text("Press space to start", font, 40.f)
 {
 	MainTitleScene_t::reset();
-}
 
-void MainTitleScene_t::reset() {
 	_title_appearence_animation = _animator.make<LinearAnimation_t>(0, 255, 3);
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 	_press_space_animation.start_after(_title_appearence_animation);
 	_title_appearence_animation.on_stop([this]() { _status = WAIT_FOR_START; });
 	_title_appearence_animation.start();
+}
 
+void MainTitleScene_t::reset() {
 	_main_title_text.setPosition(200, 200);
 	_press_space_text.setPosition(350, 500);
+
+	_animator.reset();
 }
 
 void MainTitleScene_t::set_font(const sf::Font& font) {
@@ -31,7 +33,6 @@ void MainTitleScene_t::set_font(const sf::Font& font) {
 void MainTitleScene_t::send_event(sf::Event event) {
 	if (_status == WAIT_FOR_START && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 		_status = STARTED;
-		_press_space_animation.stop();
 	}
 }
 

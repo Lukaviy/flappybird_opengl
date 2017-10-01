@@ -2,6 +2,8 @@
 
 TimerAnimation_t::TimerAnimation_t(float duration) : _duration(duration) {}
 
-bool TimerAnimation_t::_step(float time) {
-	return time >= _duration;
+void TimerAnimation_t::_step(float time) {
+	if (time >= _duration) {
+		_state = PLAYED;
+	}
 }

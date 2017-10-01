@@ -1,30 +1,36 @@
 #pragma once
 #include <list>
-#include <vector>
 #include <functional>
 
-class AnimPointer_t;
 class Animator_t;
 
 class Animation_t {
 public:
 	Animation_t();
-	virtual ~Animation_t();
+	virtual ~Animation_t() = default;
 
-	friend AnimPointer_t;
+	float val() const;
+
+	enum State_t {
+		WAIT,
+		PLAYING,
+		PLAYED
+	} state() const;
+
+	void on_start(std::function<void()>);
+	void on_stop(std::function<void()>);
+
+	void start();
+	void stop();
+
 	friend Animator_t;
 protected:
 	float _val;
-	bool _playing;
+	
+	State_t _state;
 
-	std::vector<Animation_t*> _start_after_animations;
-	std::vector<Animation_t*> _start_with_animations;
-	std::list<AnimPointer_t*> _pointers;
-
-	void _start();
-	void _start_after(Animation_t* animation);
-	void _start_with(Animation_t* animation);
-	virtual bool _step(float time) = 0;
+	virtual void _step(float time) = 0;
+	virtual void _reset();
 
 	std::list<std::function<void()>> _on_start_callbacks;
 	std::list<std::function<void()>> _on_stop_callbacks;

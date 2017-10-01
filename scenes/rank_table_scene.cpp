@@ -17,63 +17,60 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_curr_player_name_text = sf::Text("", _font, 30);
 	_press_space_text = sf::Text("Press space to restart", _font, 20);
 	_best_score_text = sf::Text("Best score: ", _font, 30);
-	RankTableScene_t::reset();
-	_status = START;
-}
 
-void RankTableScene_t::reset() {
-	_status = RESTARTED;
 
 	_enter_your_name_text.setPosition(30.f, 20.f);
 	_press_space_text.setPosition(40.f, 460.f);
 	_background_rect.setSize(_size);
 
-	auto starter = _animator.make<StarterAnimation_t>();
-
 	_appearence_background_animation = _animator.make<LinearAnimation_t>(0, 150, 0.5f)
-		.start_after(starter)
 		.on_stop([this]() { _status = TYPING_NAME; });
 
 	_appearence_text_color_animation = _animator.make<LinearAnimation_t>(0, 255, 0.5f)
-		.start_after(_animator.make<TimerAnimation_t>(0.1f).start_after(starter));
+		.start_after(_animator.make<TimerAnimation_t>(0.1f).start_after(_appearence_background_animation));
 
 	_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 30.f, 0.5f)
-		.start_after(_animator.make<TimerAnimation_t>(0.2f).start_after(starter));
+		.start_after(_animator.make<TimerAnimation_t>(0.2f).start_after(_appearence_background_animation));
 
-	_press_space_animation.stop();
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f).
 		start_with(_press_space_animation);
 	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f).
 		start_with(_best_score_appearence_animation);
 
-	_enter_your_name_dissapearing.stop();
-	_enter_your_name_text_color_dissapearing.stop();
-	_enter_your_name_dissapearing = AnimPointer_t();
-	_enter_your_name_text_color_dissapearing = AnimPointer_t();
+	_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.5f);
 
-	starter.start();
+	_status = START;
+	_appearence_background_animation.start();
+}
+
+void RankTableScene_t::reset() {
+	_status = RESTARTED;
+	_animator.reset();
+	_enter_your_name_text.setPosition(30.f, 20.f);
+
+	_appearence_background_animation.start();
 }
 
 void RankTableScene_t::step(float dt) {
 	_animator.step(dt);
 
 	_background_rect.setFillColor(sf::Color(50, 50, 50, _appearence_background_animation.val()));
-	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val() + _enter_your_name_text_color_dissapearing.val()));
+	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val()));
+	_enter_your_name_text.setPosition(30.f + (_enter_your_name_dissapearing.alive() ? _enter_your_name_dissapearing.val() : 0), 20.f);
 	_curr_player_name_text.setString(
 		_player_name + (_status == TYPING_NAME && 
 			int(floor(_animator.elapsed_time() * 2.f)) & 1 && _animator.elapsed_time() - _last_type_time > 0.5f ? "|" : "")
 	);
 	_curr_player_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val()));
-	_curr_player_name_text.setPosition(230.f + _enter_your_name_dissapearing.val(), 20.f);
+	_curr_player_name_text.setPosition(230.f + (_enter_your_name_dissapearing.alive() ? _enter_your_name_dissapearing.val() : 0), 20.f);
 	_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
 	_score_text_color = sf::Color(255, 255, 255, _appearence_text_color_animation.val());
-	_score_appearence_animation.val();
 
 	if (_status == SCORE_SAVED) {
 		_best_score_text.setString(std::string("Best score: ") + std::to_string(_rank_table[_player_name].score));
 		_best_score_text.setFillColor(sf::Color(255, 255, 255, _best_score_text_color_animation.val()));
-		_best_score_text.setPosition(30.f, _best_score_appearence_animation.val() + 30.f);
+		_best_score_text.setPosition(_best_score_appearence_animation.val(), 20.f);
 	}
 }
 
@@ -97,8 +94,10 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_status = SCORE_SAVED;
 			_press_space_animation.start();
 
-			_enter_your_name_dissapearing = _animator.make<LinearAnimation_t>(0, -_best_score_text.getLocalBounds().width / 2, 0.5f);
-			_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.5f)
+			_enter_your_name_dissapearing = _animator.make<LinearAnimation_t>(0, -200.f, 0.5f);
+			_enter_your_name_text_color_dissapearing.start_with(_enter_your_name_dissapearing);
+
+			_best_score_appearence_animation = _animator.make<LinearAnimation_t>(500.f, 50.f + _curr_player_name_text.getLocalBounds().width, 0.5f)
 				.start_with(_enter_your_name_dissapearing);
 
 			_enter_your_name_dissapearing.start();
@@ -141,14 +140,28 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	if (_status == SCORE_SAVED && _rank_table.exists(_player_name)) {
 		target.draw(_best_score_text, states);
 	}
-	
-	unsigned int start = std::max(0, signed(_place) - 5);
-	unsigned int end = std::min(_rank_table.size(), start + 10);
+	unsigned int start = 0;
+	unsigned int end = 0;
+	if (_place <= 5) {
+		start = 0;
+		end = std::min(unsigned(10), _rank_table.size());
+	} else if (_place >= _rank_table.size() - 5) {
+		if (_rank_table.size() < 10) {
+			start = 0;
+			end = _rank_table.size();
+		} else {
+			start = _rank_table.size() - 11;
+			end = _rank_table.size() - 1;
+		}
+	} else {
+		start = _place - 5;
+		end = _place + 5;
+	}
 
  	for (int i = start; i < end; i++) {
 		sf::Text text(std::to_string(i + 1) + '.', _font, 20.f);
 		float width = text.getLocalBounds().width;
-		text.setPosition(110.f - width, _best_score_appearence_animation.cached_val() + 70 + 20.f * (i - start));
+		text.setPosition(110.f - width, + 70 + 20.f * (i - start));
 		text.setFillColor(_score_text_color);
 		target.draw(text, states);
 
@@ -158,7 +171,7 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 		target.draw(text, states);
 
 		text.setString(std::to_string(_rank_table[i].score));
-		text.move(100.f + _score_appearence_animation.cached_val(), 0);
+		text.move(100.f + _score_appearence_animation.val(), 0);
 		target.draw(text, states);
 	}
 
