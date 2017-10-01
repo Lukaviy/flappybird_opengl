@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Window/Event.hpp>
 #include "scene.h"
+#include <SFML/Graphics/View.hpp>
 
 class RankTableScene_t : public Scene_t {
 public:
@@ -15,6 +16,14 @@ public:
 	void set_size(sf::Vector2f size);
 	void set_font(sf::Font font);
 	void set_score(unsigned int score);
+
+	enum RankTableSceneStatus_t {
+		START,
+		TYPING_NAME,
+		SCORE_SAVED,
+	};
+
+	RankTableSceneStatus_t get_state() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	
@@ -25,9 +34,11 @@ protected:
 
 	sf::RectangleShape _background_rect;
 	sf::Font _font;
+	sf::View _view;
 
 	std::string _player_name;
 	unsigned int _score;
 	float _elapsed_time;
 	float _last_type_time;
+	RankTableSceneStatus_t _status;
 };
