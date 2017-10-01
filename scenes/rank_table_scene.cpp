@@ -47,6 +47,8 @@ void RankTableScene_t::reset() {
 	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f).
 		start_with(_best_score_appearence_animation);
 
+	_enter_your_name_dissapearing.stop();
+	_enter_your_name_text_color_dissapearing.stop();
 	_enter_your_name_dissapearing = AnimPointer_t();
 	_enter_your_name_text_color_dissapearing = AnimPointer_t();
 
