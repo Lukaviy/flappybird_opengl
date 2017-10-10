@@ -69,14 +69,9 @@ void GameScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) const 
 		0, 0, 1
 	);
 
-	auto map = _game_core.get_map();
-	int curr_ceil = _game_core.get_current_ceil();
-
 	target.setView(_game_view);
 
-	for (int i = 0; i < map.size(); i++) {
-		auto tube = map[(curr_ceil + i) % map.size()];
-
+	for (auto tube : _game_core.get_map()) {
 		float hole_size = tube.hole_size;
 		float hole_pos = tube.y_pos;
 		float x_pos = tube.x_pos - bird_pos.x;

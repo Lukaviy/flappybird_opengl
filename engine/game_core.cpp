@@ -6,14 +6,13 @@ GameCore_t::GameCore_t(
 
 	_x_pos(start_pos), _y_pos(0.5), _x_velocity(x_velocity), _y_velocity(0), 
 	_y_accel(y_accel), _y_flap_velocity(y_flap_velocity), _tube_dist(tube_dist), _tube_width(tube_width),
-	_curr_cell(0), _bird_height(bird_heiht), _bird_width(bird_width), _hole_size(hole_size), 
+	_bird_height(bird_heiht), _bird_width(bird_width), _hole_size(hole_size), 
 	_start_pos(start_pos), _state(PLAYING), _map(map_size), _freeze_x_pos(false)
 {
-	for (int i = 0; i < map_size; i++) {
-		_map[i].y_pos = -0.6f + i * 1.f / map_size * 1.8f;
-		_map[i].hole_size = hole_size;
-		_map[i].x_pos = i * (tube_width + tube_dist);
+	for (size_t i = 0; i < map_size; i++) {
+		_map.push_back(gen_map_element(i * (tube_width + tube_dist)));
 	}
+	_curr_cell = _map.begin();
 }
 
 void GameCore_t::step(float dtime, bool flap) {
@@ -25,17 +24,17 @@ void GameCore_t::step(float dtime, bool flap) {
 		return;
 	}
 
-	if (_map[_curr_cell % _map.size()].x_pos + _tube_width / 2 <= _x_pos - _bird_width / 2) {
-		MapElement_t& next_map_element = _map[(_curr_cell + _map.size() - 1) % _map.size()];
-		next_map_element.x_pos = _map[(_curr_cell + _map.size() - 2) % _map.size()].x_pos + _tube_width + _tube_dist;
-		next_map_element.y_pos = -1.f + _hole_size / 2.f + 0.1f + (rand() % 100) / 100.f * (2.f - _hole_size - 0.2f);
-		next_map_element.hole_size = _hole_size;
+	if (_curr_cell->x_pos + _tube_width / 2 <= _x_pos - _bird_width / 2) {
+		if (_x_pos - _map.front().x_pos > 0.5f) {
+  			_map.push_back_override(gen_map_element(_map.back().x_pos + _tube_width + _tube_dist));
+		}
 		++_curr_cell;
 	}
-	auto hole = _map[_curr_cell % _map.size()];
-	if ((_x_pos + _bird_width / 2 >= hole.x_pos - _tube_width / 2 &&
-		(_y_pos + _bird_height / 2 >= hole.y_pos + hole.hole_size / 2 || _y_pos - _bird_height / 2 <= hole.y_pos - hole.hole_size / 2) ||
-		_y_pos <= -1 || _y_pos >= 1))
+	auto hole = *_curr_cell;
+	if (_x_pos + _bird_width / 2 >= _curr_cell->x_pos - _tube_width / 2 && (
+			_y_pos + _bird_height / 2 >= _curr_cell->y_pos + _curr_cell->hole_size / 2 || 
+			_y_pos - _bird_height / 2 <= _curr_cell->y_pos - _curr_cell->hole_size / 2
+		) || _y_pos <= -1 || _y_pos >= 1)
 	{
 		_state = DEAD;
 	} else {
@@ -50,10 +49,14 @@ void GameCore_t::reset() {
 	_y_pos = 0.5;
 	_y_velocity = 0;
 	_state = PLAYING;
-	_curr_cell = 0;
-	for (int i = 0; i < _map.size(); i++) {
-		_map[i].x_pos = i * (_tube_width + _tube_dist);
+
+	_map.clear();
+
+	float x_pos = 0;
+	for (size_t i = 0; i < _map.size(); i++) {
+		_map.push_back_override(gen_map_element(x_pos += _tube_width + _tube_dist));
 	}
+	_curr_cell = _map.begin();
 }
 
 GameCore_t::Vec_t GameCore_t::get_bird_pos() const {
@@ -76,6 +79,15 @@ void GameCore_t::freeze_x_pos(bool freeze) {
 	_freeze_x_pos = freeze;
 }
 
-const std::vector<GameCore_t::MapElement_t>& GameCore_t::get_map() const {
+const RingBuffer_t<GameCore_t::MapElement_t>& GameCore_t::get_map() const {
 	return _map;
+}
+
+GameCore_t::MapElement_t GameCore_t::gen_map_element(float x_pos) const {
+	MapElement_t map_element;
+	map_element.x_pos = x_pos;
+	map_element.y_pos = -1.f + _hole_size / 2.f + 0.1f + (rand() % 100) / 100.f * (2.f - _hole_size - 0.2f);
+	map_element.hole_size = _hole_size;
+
+	return map_element;
 }

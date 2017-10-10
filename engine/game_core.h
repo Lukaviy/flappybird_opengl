@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <vector>
+#include "ring_buffer.h"
 
 class GameCore_t {
 public:
@@ -12,9 +13,9 @@ public:
 	};
 
 	struct MapElement_t {
-		float y_pos; 
-		float hole_size;
 		float x_pos;
+		float y_pos;
+		float hole_size;
 	};
 
 	enum State_t {
@@ -31,7 +32,7 @@ public:
 	State_t get_state() const;
 	void freeze_x_pos(bool freeze);
 
-	const std::vector<MapElement_t>& get_map() const;
+	const RingBuffer_t<MapElement_t>& get_map() const;
 private:
 	float _x_pos;
 	float _y_pos;
@@ -41,12 +42,14 @@ private:
 	float _y_flap_velocity;
 	float _tube_dist;
 	float _tube_width;
-	int _curr_cell;
 	float _bird_height;
 	float _bird_width; 
 	float _hole_size;
 	float _start_pos;
 	State_t _state;
-	std::vector<MapElement_t> _map;
+	RingBuffer_t<MapElement_t> _map;
+	RingBuffer_t<MapElement_t>::iterator _curr_cell;
 	bool _freeze_x_pos;
+
+	MapElement_t gen_map_element(float x_pos) const;
 };
