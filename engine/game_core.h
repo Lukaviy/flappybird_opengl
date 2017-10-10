@@ -16,6 +16,9 @@ public:
 		float x_pos;
 		float y_pos;
 		float hole_size;
+		float width;
+
+		bool intersect(Vec_t point, Vec_t rect_size) const;
 	};
 
 	enum State_t {

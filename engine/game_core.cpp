@@ -15,6 +15,12 @@ GameCore_t::GameCore_t(
 	_curr_cell = _map.begin();
 }
 
+bool GameCore_t::MapElement_t::intersect(Vec_t point, Vec_t rect_size) const {
+	return point.x + rect_size.x / 2 >= x_pos - width / 2 && (
+		point.y + rect_size.y / 2 >= y_pos + hole_size / 2 ||
+		point.y - rect_size.y / 2 <= y_pos - hole_size / 2);
+}
+
 void GameCore_t::step(float dtime, bool flap) {
 	if (_state == DEAD) {
 		if (_y_pos >= -1) {
@@ -31,11 +37,7 @@ void GameCore_t::step(float dtime, bool flap) {
 		++_curr_cell;
 	}
 	auto hole = *_curr_cell;
-	if (_x_pos + _bird_width / 2 >= _curr_cell->x_pos - _tube_width / 2 && (
-			_y_pos + _bird_height / 2 >= _curr_cell->y_pos + _curr_cell->hole_size / 2 || 
-			_y_pos - _bird_height / 2 <= _curr_cell->y_pos - _curr_cell->hole_size / 2
-		) || _y_pos <= -1 || _y_pos >= 1)
-	{
+	if (_curr_cell->intersect(Vec_t {_x_pos, _y_pos }, Vec_t { _bird_width, _bird_height }) || _y_pos <= -1 || _y_pos >= 1) {
 		_state = DEAD;
 	} else {
 		_y_velocity = _y_flap_velocity * flap + (_y_velocity + _y_accel * dtime) * !flap;
@@ -88,6 +90,7 @@ GameCore_t::MapElement_t GameCore_t::gen_map_element(float x_pos) const {
 	map_element.x_pos = x_pos;
 	map_element.y_pos = -1.f + _hole_size / 2.f + 0.1f + (rand() % 100) / 100.f * (2.f - _hole_size - 0.2f);
 	map_element.hole_size = _hole_size;
+	map_element.width = _tube_width;
 
 	return map_element;
 }
