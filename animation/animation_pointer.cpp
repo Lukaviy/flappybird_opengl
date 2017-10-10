@@ -11,6 +11,10 @@ float AnimPointer_t::val() const {
 	return _animation->val();
 }
 
+float AnimPointer_t::val_or(float v) const {
+	return alive() ? val() : v;
+}
+
 void AnimPointer_t::start() const {
 	_animation->start();
 }

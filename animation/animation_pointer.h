@@ -9,6 +9,7 @@ class AnimPointer_t {
 public:
 	AnimPointer_t();
 	float val() const;
+	float val_or(float val) const;
 	void start() const;
 	bool playing() const;
 	bool alive() const;

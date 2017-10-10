@@ -57,13 +57,13 @@ void RankTableScene_t::step(float dt) {
 
 	_background_rect.setFillColor(sf::Color(50, 50, 50, _appearence_background_animation.val()));
 	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val() + _enter_your_name_text_color_dissapearing.val()));
-	_enter_your_name_text.setPosition(30.f + (_enter_your_name_dissapearing.alive() ? _enter_your_name_dissapearing.val() : 0), 20.f);
+	_enter_your_name_text.setPosition(30.f + _enter_your_name_dissapearing.val_or(0), 20.f);
 	_curr_player_name_text.setString(
 		_player_name + (_status == TYPING_NAME && 
 			int(floor(_animator.elapsed_time() * 2.f)) & 1 && _animator.elapsed_time() - _last_type_time > 0.5f ? "|" : "")
 	);
 	_curr_player_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val()));
-	_curr_player_name_text.setPosition(230.f + (_enter_your_name_dissapearing.alive() ? _enter_your_name_dissapearing.val() : 0), 20.f);
+	_curr_player_name_text.setPosition(230.f + _enter_your_name_dissapearing.val_or(0), 20.f);
 	_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
 	_score_text_color = sf::Color(255, 255, 255, _appearence_text_color_animation.val());
 
