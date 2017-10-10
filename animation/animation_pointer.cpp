@@ -37,6 +37,10 @@ bool AnimPointer_t::playing() const {
 	return _animation && _animation->state() == Animation_t::PLAYING;
 }
 
+bool AnimPointer_t::played() const {
+	return !_animation || _animation->state() == Animation_t::PLAYED;
+}
+
 bool AnimPointer_t::alive() const {
 	return _animation != nullptr;
 }

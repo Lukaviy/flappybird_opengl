@@ -12,6 +12,7 @@ public:
 	float val_or(float val) const;
 	void start() const;
 	bool playing() const;
+	bool played() const;
 	bool alive() const;
 	const AnimPointer_t& start_after(const AnimPointer_t& pointer) const;
 	const AnimPointer_t& start_with(const AnimPointer_t& pointer) const;
