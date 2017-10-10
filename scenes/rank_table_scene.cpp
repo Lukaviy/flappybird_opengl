@@ -18,7 +18,6 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_press_space_text = sf::Text("Press space to restart", _font, 20);
 	_best_score_text = sf::Text("Best score: ", _font, 30);
 
-
 	_enter_your_name_text.setPosition(30.f, 20.f);
 	_press_space_text.setPosition(40.f, 460.f);
 	_background_rect.setSize(_size);
@@ -33,10 +32,10 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 		.start_after(_animator.make<TimerAnimation_t>(0.4f).start_with(_appearence_background_animation));
 
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
-	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f).
+	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.2f).
 		start_with(_press_space_animation);
 
-	_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.5f);
+	_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.2f);
 
 	_status = START;
 	_appearence_background_animation.start();
@@ -55,7 +54,7 @@ void RankTableScene_t::step(float dt) {
 	_background_rect.setFillColor(sf::Color(50, 50, 50, _appearence_background_animation.val()));
  	_enter_your_name_text.setFillColor(sf::Color(255, 255, 255, 
 		std::max(_appearence_text_color_animation.val() + _enter_your_name_text_color_dissapearing.val(), 0.f)));
-	_enter_your_name_text.setPosition(30.f + _enter_your_name_dissapearing.val_or(0), 20.f);
+	_enter_your_name_text.setPosition(30.f, 20.f);
 	_curr_player_name_text.setString(
 		_player_name + (_status == TYPING_NAME && 
 			int(floor(_animator.elapsed_time() * 2.f)) & 1 && _animator.elapsed_time() - _last_type_time > 0.5f ? "|" : "")
@@ -90,6 +89,7 @@ void RankTableScene_t::send_event(sf::Event event) {
 		if (event.key.code == sf::Keyboard::Return && !_player_name.empty()) {
 			_rank_table.save_score(_player_name.c_str(), _score);
 			_status = SCORE_SAVED;
+
 			_press_space_animation.start();
 
 			_enter_your_name_dissapearing = _animator.make<LinearAnimation_t>(0, -200.f, 0.5f);
