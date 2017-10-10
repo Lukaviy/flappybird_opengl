@@ -149,7 +149,7 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 		start = 0;
 		end = std::min(list_size, _rank_table.size());
 	} else if (_place >= _rank_table.size() - list_size / 2) {
-		if (_rank_table.size() < list_size) {
+		if (_rank_table.size() <= list_size) {
 			start = 0;
 			end = _rank_table.size();
 		} else {
@@ -161,7 +161,7 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 		end = _place + (list_size - list_size / 2);
 	}
 
- 	for (int i = start; i < end; i++) {
+ 	for (unsigned int i = start; i < end; i++) {
 		sf::Text text(std::to_string(i + 1) + '.', _font, 20.f);
 		float width = text.getLocalBounds().width;
 		text.setPosition(110.f - width, + 70 + 20.f * (i - start));
