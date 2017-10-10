@@ -38,7 +38,7 @@ bool AnimPointer_t::playing() const {
 }
 
 bool AnimPointer_t::alive() const {
-	return _animation;
+	return _animation != nullptr;
 }
 
 const AnimPointer_t& AnimPointer_t::on_start(std::function<void()> callback) const {

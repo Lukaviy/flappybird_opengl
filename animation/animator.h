@@ -40,5 +40,13 @@ AnimPointer_t Animator_t::make(Args... args) {
 		_paused_animations.splice(_paused_animations.end(), _playing_animations, iter_to_list);
 	});
 
+	animation->on_destroy([this, iter_to_list]() {
+		if (iter_to_list->animation->_state == Animation_t::PLAYING) {
+			_playing_animations.erase(iter_to_list);
+		} else {
+			_paused_animations.erase(iter_to_list);
+		}
+	});
+
 	return AnimPointer_t(animation, this);
 }

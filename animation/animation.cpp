@@ -3,6 +3,12 @@
 
 Animation_t::Animation_t() : _val(0), _state(WAIT) {}
 
+Animation_t::~Animation_t() {
+	for (auto callback : _on_destroy_callbacks) {
+		callback();
+	}
+}
+
 float Animation_t::val() const {
 	return _val;
 }
@@ -17,6 +23,10 @@ void Animation_t::on_start(std::function<void()> callback) {
 
 void Animation_t::on_stop(std::function<void()> callback) {
 	_on_stop_callbacks.push_back(callback);
+}
+
+void Animation_t::on_destroy(std::function<void()> callback) {
+	_on_destroy_callbacks.push_back(callback);
 }
 
 void Animation_t::start() {

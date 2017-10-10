@@ -7,7 +7,7 @@ class Animator_t;
 class Animation_t {
 public:
 	Animation_t();
-	virtual ~Animation_t() = default;
+	virtual ~Animation_t();
 
 	float val() const;
 
@@ -19,6 +19,7 @@ public:
 
 	void on_start(std::function<void()>);
 	void on_stop(std::function<void()>);
+	void on_destroy(std::function<void()>);
 
 	void start();
 	void stop();
@@ -34,4 +35,5 @@ protected:
 
 	std::list<std::function<void()>> _on_start_callbacks;
 	std::list<std::function<void()>> _on_stop_callbacks;
+	std::list<std::function<void()>> _on_destroy_callbacks;
 };

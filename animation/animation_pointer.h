@@ -1,7 +1,7 @@
 #pragma once
 #include "animation.h"
-#include <list>
 #include <functional>
+#include <memory>
 
 class Animator_t;
 
@@ -23,5 +23,5 @@ protected:
 	AnimPointer_t(Animation_t* animation, Animator_t* animator);
 
 	Animator_t* _animator;
-	Animation_t* _animation;
+	std::shared_ptr<Animation_t> _animation;
 };
