@@ -62,5 +62,5 @@ protected:
 	unsigned int _place;
 	float _last_type_time;
 	float _save_score_time;
-	RankTableSceneStatus_t _status;
+	RankTableSceneStatus_t _state;
 };

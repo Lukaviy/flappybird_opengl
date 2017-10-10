@@ -10,7 +10,7 @@
 #include "../animation/starter_animation.h"
 
 RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) : 
-	_rank_table(rank_table), _score(0), _last_type_time(0), _status(START),
+	_rank_table(rank_table), _score(0), _last_type_time(0), _state(START),
 	_view(sf::Rect<float>(0.f, 0.f, 500.f, 500.f)), _save_score_time(0), _place(0), _font(font)
 {
 	_enter_your_name_text = sf::Text("Enter your name: ", _font, 30);
@@ -23,7 +23,7 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_background_rect.setSize(_size);
 
 	_appearence_background_animation = _animator.make<LinearAnimation_t>(0, 150, 0.5f)
-		.on_stop([this]() { _status = TYPING_NAME; });
+		.on_stop([this]() { _state = TYPING_NAME; });
 
 	_appearence_text_color_animation = _animator.make<LinearAnimation_t>(0, 255, 0.7f)
 		.start_after(_animator.make<TimerAnimation_t>(0.4f).start_with(_appearence_background_animation));
@@ -37,12 +37,12 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 
 	_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.2f);
 
-	_status = START;
+	_state = START;
 	_appearence_background_animation.start();
 }
 
 void RankTableScene_t::reset() {
-	_status = START;
+	_state = START;
 	_animator.reset();
 
 	_appearence_background_animation.start();
@@ -56,7 +56,7 @@ void RankTableScene_t::step(float dt) {
 		std::max(_appearence_text_color_animation.val() + _enter_your_name_text_color_dissapearing.val(), 0.f)));
 	_enter_your_name_text.setPosition(30.f, 20.f);
 	_curr_player_name_text.setString(
-		_player_name + (_status == TYPING_NAME && 
+		_player_name + (_state == TYPING_NAME && 
 			int(floor(_animator.elapsed_time() * 2.f)) & 1 && _animator.elapsed_time() - _last_type_time > 0.5f ? "|" : "")
 	);
 	_curr_player_name_text.setFillColor(sf::Color(255, 255, 255, _appearence_text_color_animation.val()));
@@ -64,7 +64,7 @@ void RankTableScene_t::step(float dt) {
 	_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
 	_score_text_color = sf::Color(255, 255, 255, _appearence_text_color_animation.val());
 
-	if (_status == SCORE_SAVED) {
+	if (_state == SCORE_SAVED) {
 		_best_score_text.setString(std::string("Best score: ") + std::to_string(_rank_table[_player_name].score));
 		_best_score_text.setFillColor(sf::Color(255, 255, 255, _best_score_text_color_animation.val()));
 		_best_score_text.setPosition(_best_score_appearence_animation.val(), 20.f);
@@ -72,7 +72,7 @@ void RankTableScene_t::step(float dt) {
 }
 
 void RankTableScene_t::send_event(sf::Event event) {
-	if (_status == TYPING_NAME && event.type == sf::Event::TextEntered && (
+	if (_state == TYPING_NAME && event.type == sf::Event::TextEntered && (
 		event.text.unicode >= 'a' && event.text.unicode <= 'z' ||
 		event.text.unicode >= 'A' && event.text.unicode <= 'Z' ||
 		event.text.unicode >= '0' && event.text.unicode <= '9') &&
@@ -81,14 +81,14 @@ void RankTableScene_t::send_event(sf::Event event) {
 		_player_name += static_cast<char>(event.text.unicode);
 		_last_type_time = _animator.elapsed_time();
 	}
-	if (_status == TYPING_NAME && event.type == sf::Event::KeyPressed) {
+	if (_state == TYPING_NAME && event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::BackSpace && _player_name.size() > 0) {
 			_player_name.pop_back();
 			_last_type_time = _animator.elapsed_time();
 		}
 		if (event.key.code == sf::Keyboard::Return && !_player_name.empty()) {
 			_rank_table.save_score(_player_name.c_str(), _score);
-			_status = SCORE_SAVED;
+			_state = SCORE_SAVED;
 
 			_press_space_animation.start();
 
@@ -102,8 +102,8 @@ void RankTableScene_t::send_event(sf::Event event) {
 
 			_enter_your_name_dissapearing.start();
 		}
-	} else if (_status == SCORE_SAVED && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-		_status = RESTART_REQUESTED;
+	} else if (_state == SCORE_SAVED && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+		_state = RESTART_REQUESTED;
 	}
 }
 
@@ -125,7 +125,7 @@ void RankTableScene_t::set_score(unsigned int score) {
 }
 
 RankTableScene_t::RankTableSceneStatus_t RankTableScene_t::get_state() const {
-	return _status;
+	return _state;
 }
 
 void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -137,7 +137,7 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 	target.draw(_enter_your_name_text, states);
 	target.draw(_curr_player_name_text, states);
 	
-	if (_status == SCORE_SAVED && _rank_table.exists(_player_name)) {
+	if (_state == SCORE_SAVED && _rank_table.exists(_player_name)) {
 		target.draw(_best_score_text, states);
 	}
 	static unsigned const int list_size = 10;
@@ -176,7 +176,7 @@ void RankTableScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 		target.draw(text, states);
 	}
 
-	if (_status == SCORE_SAVED) {
+	if (_state == SCORE_SAVED) {
 		target.draw(_press_space_text);
 	}
 }
