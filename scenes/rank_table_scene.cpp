@@ -35,8 +35,6 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
 	_best_score_appearence_animation = _animator.make<LinearAnimation_t>(0.f, 25.f, 0.3f).
 		start_with(_press_space_animation);
-	_best_score_text_color_animation = _animator.make<LinearAnimation_t>(0.f, 255.f, 0.5f).
-		start_with(_best_score_appearence_animation);
 
 	_enter_your_name_text_color_dissapearing = _animator.make<LinearAnimation_t>(0, -255, 0.5f);
 
@@ -47,7 +45,6 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 void RankTableScene_t::reset() {
 	_status = START;
 	_animator.reset();
-	_enter_your_name_text.setPosition(30.f, 20.f);
 
 	_appearence_background_animation.start();
 }
