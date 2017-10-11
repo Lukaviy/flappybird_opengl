@@ -36,7 +36,7 @@ void GameCore_t::step(float dtime, bool flap) {
 		}
 		++_curr_cell;
 	}
-	auto hole = *_curr_cell;
+
 	if (_curr_cell->intersect(Vec_t {_x_pos, _y_pos }, Vec_t { _bird_width, _bird_height }) || _y_pos <= -1 || _y_pos >= 1) {
 		_state = DEAD;
 	} else {
