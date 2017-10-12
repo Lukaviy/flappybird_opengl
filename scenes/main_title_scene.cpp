@@ -19,18 +19,20 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 	_title_appearence_animation.start();
 
 	_canvas = new GuiElement_t();
-	_canvas->size(sf::Vector2f(1000.f, 1000.f));
+	_canvas->size(1000.f, 1000.f);
 
 	_main_title_label = new GuiLabel_t();
-	_main_title_label->text(_main_title_text);
-	_main_title_label->align(GuiElement_t::TOP);
-	_main_title_label->position(GuiElement_t::Position_t::relative(0, .2f));
-	_main_title_label->set_parent(_canvas);
+	_main_title_label
+		->text(_main_title_text)
+		->align(GuiElement_t::TOP)
+		->position(GuiElement_t::Position_t::relative(0, .2f))
+		->set_parent(_canvas);
 
 	_press_space_label = new GuiLabel_t();
-	_press_space_label->text(_press_space_text);
-	_press_space_label->align(GuiElement_t::CENTER);
-	_press_space_label->set_parent(_canvas);
+	_press_space_label
+		->text(_press_space_text)
+		->align(GuiElement_t::CENTER)
+		->set_parent(_canvas);
 }
 
 void MainTitleScene_t::reset() {
