@@ -1,28 +1,45 @@
 #include "gui_label.h"
 #include <SFML/Graphics.hpp>
 
-GuiLabel_t* GuiLabel_t::text(sf::Text text) {
-	_text = text;
+GuiLabel_t* GuiLabel_t::text(const std::string& val) {
+	_text.setString(val);
 	update();
 	return this;
 }
 
-sf::Text& GuiLabel_t::text() {
-	return _text;
+std::string GuiLabel_t::text() const {
+	return _text.getString();
+}
+
+GuiLabel_t* GuiLabel_t::color(sf::Color val) {
+	_text.setFillColor(val);
+	return this;
+}
+
+sf::Color GuiLabel_t::color() const {
+	return _text.getFillColor();
+}
+
+GuiLabel_t* GuiLabel_t::font(const sf::Font& val) {
+	_text.setFont(val);
+	return this;
+}
+
+const sf::Font* GuiLabel_t::font() const {
+	return _text.getFont();
+}
+
+GuiLabel_t* GuiLabel_t::char_size(size_t val) {
+	_text.setCharacterSize(val);
+	update();
+	return this;
+}
+
+size_t GuiLabel_t::char_size() const {
+	return _text.getCharacterSize();
 }
 
 void GuiLabel_t::on_draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	/*sf::RectangleShape rect(_size);
-	rect.setPosition(0, 0);
-	rect.setFillColor(sf::Color::Red);
-
-	sf::CircleShape origin(10.f);
-	origin.setPosition(sf::Vector2f(-10, -10) + getOrigin());
-	origin.setFillColor(sf::Color::Green);
-
-	target.draw(rect, states);
-	target.draw(origin, states);
-	*/
 	target.draw(_text, states);
 }
 

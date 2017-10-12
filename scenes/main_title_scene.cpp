@@ -7,8 +7,7 @@
 #include "../gui/gui_label.h"
 
 MainTitleScene_t::MainTitleScene_t(const sf::Font& font) : 
-	_view(sf::Rect<float>(0.f, 0.f, 1000.f, 1000.f)), _status(SHOWING), 
-	_main_title_text("FLAPPY CUBE", font, 150.f), _press_space_text("Press space to start", font, 40.f)
+	_view(sf::Rect<float>(0.f, 0.f, 1000.f, 1000.f)), _status(SHOWING)
 {
 	MainTitleScene_t::reset();
 
@@ -23,14 +22,18 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 
 	_main_title_label = new GuiLabel_t();
 	_main_title_label
-		->text(_main_title_text)
+		->text("FLAPPY CUBE")
+		->font(font)
+		->char_size(150)
 		->align(GuiElement_t::TOP)
 		->position(GuiElement_t::Position_t::relative(0, .2f))
 		->parent(_canvas);
 
 	_press_space_label = new GuiLabel_t();
 	_press_space_label
-		->text(_press_space_text)
+		->text("Press space to start")
+		->font(font)
+		->char_size(40)
 		->align(GuiElement_t::CENTER)
 		->parent(_canvas);
 }
@@ -39,9 +42,9 @@ void MainTitleScene_t::reset() {
 	_animator.reset();
 }
 
-void MainTitleScene_t::set_font(const sf::Font& font) {
-	_main_title_text.setFont(font);
-	_press_space_text.setFont(font);
+void MainTitleScene_t::set_font(const sf::Font& font) const {
+	_main_title_label->font(font);
+	_press_space_label->font(font);
 }
 
 void MainTitleScene_t::send_event(sf::Event event) {
@@ -62,6 +65,6 @@ void MainTitleScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) c
 void MainTitleScene_t::step(float dt) {
 	_animator.step(dt);
 
-	_main_title_label->text().setFillColor(sf::Color(255, 255, 255, _title_appearence_animation.val()));
-	_press_space_label->text().setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
+	_main_title_label->color(sf::Color(255, 255, 255, _title_appearence_animation.val()));
+	_press_space_label->color(sf::Color(255, 255, 255, _press_space_animation.val()));
 }
