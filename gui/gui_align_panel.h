@@ -10,6 +10,8 @@ public:
 		BOTTOM_TO_TOP,
 		RIGHT_TO_LEFT
 	};
+
+	GuiAlignPanel_t();
 protected:
 	void on_update() override;
 

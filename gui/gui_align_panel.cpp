@@ -1,5 +1,7 @@
 #include "gui_align_panel.h"
 
+GuiAlignPanel_t::GuiAlignPanel_t(): _direction(TOP_TO_BOTTOM) {}
+
 void GuiAlignPanel_t::on_update() {
 	float pos = 
 		_direction == BOTTOM_TO_TOP ? _size.y :
