@@ -3,7 +3,7 @@
 
 class SinAnimation_t : public Animation_t {
 public:
-	SinAnimation_t(float min_val, float max_val, float frequency, float phase, float duration = 0);
+	SinAnimation_t(float min_val, float max_val, float frequency, float phase = 0, float duration = 0);
 protected:
 	void _step(float time) override;
 

@@ -12,7 +12,7 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 	MainTitleScene_t::reset();
 
 	_title_appearence_animation = _animator.make<LinearAnimation_t>(0, 255, 3);
-	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, -M_PI_2);
+	_press_space_animation = _animator.make<SinAnimation_t>(0, 255, 5, 0);
 	_press_space_animation.start_after(_title_appearence_animation);
 	_title_appearence_animation.on_stop([this]() { _status = WAIT_FOR_START; });
 	_title_appearence_animation.start();
