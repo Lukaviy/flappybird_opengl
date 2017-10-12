@@ -17,7 +17,7 @@ void Animator_t::step(float dtm) {
 		if (i->animation->state() == Animation_t::PLAYED) {
 			i++->animation->stop();
 		} else {
-			i->animation->_step(_elapsed_time - i->start_time);
+			i->animation->step(_elapsed_time - i->start_time);
 		}
 		if (i == _playing_animations.end()) {
 			break;
@@ -28,7 +28,7 @@ void Animator_t::step(float dtm) {
 void Animator_t::reset() {
 	_paused_animations.splice(_paused_animations.end(), _playing_animations);
 	for (auto container : _paused_animations) {
-		container.animation->_reset();
+		container.animation->reset();
 	}
 }
 

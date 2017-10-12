@@ -50,7 +50,17 @@ const AnimPointer_t& AnimPointer_t::on_start(std::function<void()> callback) con
 	return *this;
 }
 
+const AnimPointer_t& AnimPointer_t::on_step(std::function<void(float val)> callback) const {
+	_animation->on_step(callback);
+	return *this;
+}
+
 const AnimPointer_t& AnimPointer_t::on_stop(std::function<void()> callback) const {
 	_animation->on_stop(callback);
+	return *this;
+}
+
+const AnimPointer_t& AnimPointer_t::on_reset(std::function<void()> callback) const {
+	_animation->on_reset(callback);
 	return *this;
 }

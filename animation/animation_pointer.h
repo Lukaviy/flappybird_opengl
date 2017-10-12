@@ -17,7 +17,9 @@ public:
 	const AnimPointer_t& start_after(const AnimPointer_t& pointer) const;
 	const AnimPointer_t& start_with(const AnimPointer_t& pointer) const;
 	const AnimPointer_t& on_start(std::function<void()> callback) const;
+	const AnimPointer_t& on_step(std::function<void(float val)> callback) const;
 	const AnimPointer_t& on_stop(std::function<void()> callback) const;
+	const AnimPointer_t& on_reset(std::function<void()> callback) const;
 protected:
 	friend Animator_t;
 

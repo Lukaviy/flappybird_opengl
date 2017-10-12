@@ -18,7 +18,9 @@ public:
 	} state() const;
 
 	void on_start(std::function<void()>);
+	void on_step(std::function<void(float val)>);
 	void on_stop(std::function<void()>);
+	void on_reset(std::function<void()>);
 	void on_destroy(std::function<void()>);
 
 	void start();
@@ -30,10 +32,14 @@ protected:
 	
 	State_t _state;
 
+	void step(float time);
 	virtual void _step(float time) = 0;
+	void reset();
 	virtual void _reset();
 
 	std::list<std::function<void()>> _on_start_callbacks;
+	std::list<std::function<void(float val)>> _on_step_callbacks;
 	std::list<std::function<void()>> _on_stop_callbacks;
+	std::list<std::function<void()>> _on_reset_callbacks;
 	std::list<std::function<void()>> _on_destroy_callbacks;
 };
