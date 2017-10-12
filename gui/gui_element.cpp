@@ -44,12 +44,24 @@ GuiElement_t* GuiElement_t::padding(Padding_t val) {
 	return this;
 }
 
+GuiElement_t* GuiElement_t::padding(float val) {
+	_padding = Padding_t(val);
+	update();
+	return this;
+}
+
 GuiElement_t::Padding_t GuiElement_t::padding() const {
 	return _padding;
 }
 
 GuiElement_t* GuiElement_t::margin(Padding_t val) {
 	_margin = val;
+	update();
+	return this;
+}
+
+GuiElement_t* GuiElement_t::margin(float val) {
+	_margin = Padding_t(val);
 	update();
 	return this;
 }

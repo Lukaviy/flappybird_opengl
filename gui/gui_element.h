@@ -18,12 +18,16 @@ public:
 		Padding_t() : left(0), top(0), right(0), bottom(0) {}
 		Padding_t(float left, float top, float right, float bottom) :
 			left(left), top(top), right(right), bottom(bottom) {}
+		Padding_t(float val) :
+			left(val), top(val), right(val), bottom(val) {}
 	};
 
 	GuiElement_t* padding(Padding_t val);
+	GuiElement_t* padding(float val);
 	Padding_t padding() const;
 
 	GuiElement_t* margin(Padding_t val);
+	GuiElement_t* margin(float val);
 	Padding_t margin() const;
 
 	GuiElement_t* set_parent(GuiElement_t* element);
