@@ -38,25 +38,27 @@ GuiElement_t::~GuiElement_t() {
 	}
 }
 
-void GuiElement_t::padding(Padding_t val) {
+GuiElement_t* GuiElement_t::padding(Padding_t val) {
 	_padding = val;
 	update();
+	return this;
 }
 
 GuiElement_t::Padding_t GuiElement_t::padding() const {
 	return _padding;
 }
 
-void GuiElement_t::margin(Padding_t val) {
+GuiElement_t* GuiElement_t::margin(Padding_t val) {
 	_margin = val;
 	update();
+	return this;
 }
 
 GuiElement_t::Padding_t GuiElement_t::margin() const {
 	return _margin;
 }
 
-void GuiElement_t::set_parent(GuiElement_t* parent) {
+GuiElement_t* GuiElement_t::set_parent(GuiElement_t* parent) {
 	if (_parent) {
 		_parent->_childs.erase(_iter_to_self);
 	}
@@ -65,11 +67,13 @@ void GuiElement_t::set_parent(GuiElement_t* parent) {
 		_iter_to_self = _parent->_childs.insert(_parent->_childs.end(), this);
 	}
 	update();
+	return this;
 }
 
-void GuiElement_t::align(Align_t val) {
+GuiElement_t* GuiElement_t::align(Align_t val) {
 	_align = val;
 	update();
+	return this;
 }
 
 GuiElement_t::Align_t GuiElement_t::align() const {
@@ -80,9 +84,15 @@ sf::Vector2f GuiElement_t::size() const {
 	return _size;
 }
 
-void GuiElement_t::size(sf::Vector2f size) {
+GuiElement_t* GuiElement_t::size(sf::Vector2f size) {
 	_size = size;
 	update();
+	return this;
+}
+
+GuiElement_t* GuiElement_t::size(float width, float height) {
+	size(sf::Vector2f(width, height));
+	return this;
 }
 
 sf::Vector2f GuiElement_t::bound() const {
@@ -96,17 +106,19 @@ bool GuiElement_t::visible() const {
 	return _visible;
 }
 
-void GuiElement_t::visible(bool val) {
+GuiElement_t* GuiElement_t::visible(bool val) {
 	_visible = val;
+	return this;
 }
 
-void GuiElement_t::position(Position_t val) {
+GuiElement_t* GuiElement_t::position(Position_t val) {
 	_position = val;
 	if (_position.type == Position_t::ABSOLUTE) {
 		setPosition(_position.x, _position.y);
 	} else if (_parent) {
 		_parent->update();
 	}
+	return this;
 }
 
 GuiElement_t::Position_t GuiElement_t::position() const {

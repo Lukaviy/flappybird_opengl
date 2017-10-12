@@ -20,13 +20,13 @@ public:
 			left(left), top(top), right(right), bottom(bottom) {}
 	};
 
-	void padding(Padding_t val);
+	GuiElement_t* padding(Padding_t val);
 	Padding_t padding() const;
 
-	void margin(Padding_t val);
+	GuiElement_t* margin(Padding_t val);
 	Padding_t margin() const;
 
-	void set_parent(GuiElement_t* element);
+	GuiElement_t* set_parent(GuiElement_t* element);
 
 	enum Align_t {
 		TOP_LEFT = 0,
@@ -40,13 +40,14 @@ public:
 		CENTER = 8,
 	};
 
-	void align(Align_t val);
+	GuiElement_t* align(Align_t val);
 	Align_t align() const;
-	void size(sf::Vector2f size);
+	GuiElement_t* size(sf::Vector2f size);
+	GuiElement_t* size(float width, float height);
 	virtual sf::Vector2f size() const;
 	sf::Vector2f bound() const;
 	bool visible() const;
-	void visible(bool val);
+	GuiElement_t* visible(bool val);
 
 	struct Position_t {
 		enum Type_t {
@@ -66,7 +67,7 @@ public:
 		}
 	};
 
-	void position(Position_t val);
+	GuiElement_t* position(Position_t val);
 	Position_t position() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

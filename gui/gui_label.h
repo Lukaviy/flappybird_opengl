@@ -4,7 +4,7 @@
 
 class GuiLabel_t : public GuiElement_t {
 public:
-	void text(sf::Text text);
+	GuiLabel_t* text(sf::Text text);
 	sf::Text& text();
 protected:
 	void on_draw(sf::RenderTarget& target, sf::RenderStates states) const override;

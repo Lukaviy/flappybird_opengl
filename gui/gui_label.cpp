@@ -1,9 +1,10 @@
 #include "gui_label.h"
 #include <SFML/Graphics.hpp>
 
-void GuiLabel_t::text(sf::Text text) {
+GuiLabel_t* GuiLabel_t::text(sf::Text text) {
 	_text = text;
 	update();
+	return this;
 }
 
 sf::Text& GuiLabel_t::text() {
