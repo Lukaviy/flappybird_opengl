@@ -26,13 +26,13 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 		->text(_main_title_text)
 		->align(GuiElement_t::TOP)
 		->position(GuiElement_t::Position_t::relative(0, .2f))
-		->set_parent(_canvas);
+		->parent(_canvas);
 
 	_press_space_label = new GuiLabel_t();
 	_press_space_label
 		->text(_press_space_text)
 		->align(GuiElement_t::CENTER)
-		->set_parent(_canvas);
+		->parent(_canvas);
 }
 
 void MainTitleScene_t::reset() {

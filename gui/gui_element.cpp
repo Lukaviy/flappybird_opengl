@@ -70,7 +70,7 @@ GuiElement_t::Padding_t GuiElement_t::margin() const {
 	return _margin;
 }
 
-GuiElement_t* GuiElement_t::set_parent(GuiElement_t* parent) {
+GuiElement_t* GuiElement_t::parent(GuiElement_t* parent) {
 	if (_parent) {
 		_parent->_childs.erase(_iter_to_self);
 	}

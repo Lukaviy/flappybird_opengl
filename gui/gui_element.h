@@ -30,7 +30,7 @@ public:
 	GuiElement_t* margin(float val);
 	Padding_t margin() const;
 
-	GuiElement_t* set_parent(GuiElement_t* element);
+	GuiElement_t* parent(GuiElement_t* element);
 
 	enum Align_t {
 		TOP_LEFT = 0,
