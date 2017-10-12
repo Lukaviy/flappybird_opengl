@@ -4,6 +4,9 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include "../gui/gui_element.h"
+#include "../gui/gui_label.h"
+#include "../gui/gui_align_panel.h"
 
 class MainTitleScene_t : public Scene_t {
 public:
@@ -33,4 +36,8 @@ protected:
 	AnimPointer_t _press_space_animation;
 	sf::Text _main_title_text;
 	sf::Text _press_space_text;
+	GuiElement_t* _canvas;
+	GuiPanel_t* _panel;
+	GuiLabel_t* _main_title_label;
+	GuiLabel_t* _press_space_label;
 };

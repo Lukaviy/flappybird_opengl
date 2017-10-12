@@ -4,6 +4,7 @@
 #include <math.h>
 #include "../animation/linear_animation.h"
 #include "../animation/sin_animation.h"
+#include "../gui/gui_label.h"
 
 MainTitleScene_t::MainTitleScene_t(const sf::Font& font) : 
 	_view(sf::Rect<float>(0.f, 0.f, 1000.f, 1000.f)), _status(SHOWING), 
@@ -16,12 +17,23 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 	_press_space_animation.start_after(_title_appearence_animation);
 	_title_appearence_animation.on_stop([this]() { _status = WAIT_FOR_START; });
 	_title_appearence_animation.start();
+
+	_canvas = new GuiElement_t();
+	_canvas->size(sf::Vector2f(1000.f, 1000.f));
+
+	_main_title_label = new GuiLabel_t();
+	_main_title_label->text(_main_title_text);
+	_main_title_label->align(GuiElement_t::TOP);
+	_main_title_label->position(GuiElement_t::Position_t::relative(0, .2f));
+	_main_title_label->set_parent(_canvas);
+
+	_press_space_label = new GuiLabel_t();
+	_press_space_label->text(_press_space_text);
+	_press_space_label->align(GuiElement_t::CENTER);
+	_press_space_label->set_parent(_canvas);
 }
 
 void MainTitleScene_t::reset() {
-	_main_title_text.setPosition(200, 200);
-	_press_space_text.setPosition(350, 500);
-
 	_animator.reset();
 }
 
@@ -42,19 +54,12 @@ MainTitleScene_t::MainTitleSceneStatus_t MainTitleScene_t::get_state() const {
 
 void MainTitleScene_t::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.setView(_view);
-	target.draw(_main_title_text);
-
-	if (_press_space_animation.playing()) {
-		target.draw(_press_space_text);
-	}
+	target.draw(*_canvas);
 }
 
 void MainTitleScene_t::step(float dt) {
 	_animator.step(dt);
 
-	_main_title_text.setFillColor(sf::Color(255, 255, 255, _title_appearence_animation.val()));
-
-	if (_press_space_animation.playing()) {
-		_press_space_text.setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
-	}
+	_main_title_label->text().setFillColor(sf::Color(255, 255, 255, _title_appearence_animation.val()));
+	_press_space_label->text().setFillColor(sf::Color(255, 255, 255, _press_space_animation.val()));
 }
