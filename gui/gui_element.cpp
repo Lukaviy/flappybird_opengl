@@ -152,12 +152,11 @@ void GuiElement_t::update() {
 
 	on_update();
 
-	auto b = bound();
 	auto align_offset = offset_by_align(_padding, _align);
 	auto bound_offset = origin_offset();
 	setOrigin(sf::Vector2f(
-		b.x * _align_muls[_align].x + align_offset.x + bound_offset.x,
-		b.y * _align_muls[_align].y + align_offset.y + bound_offset.y
+		_size.x * _align_muls[_align].x + align_offset.x + bound_offset.x,
+		_size.y * _align_muls[_align].y + align_offset.y + bound_offset.y
 	));
 
 	for (auto child : _childs) {
