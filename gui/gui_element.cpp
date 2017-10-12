@@ -25,7 +25,7 @@ const GuiElement_t::Padding_t GuiElement_t::_align_margin_muls[] = {
 	Padding_t(0, 0, 0, 0),		//CENTER
 };
 
-GuiElement_t::GuiElement_t() : _align(TOP_LEFT), _parent(nullptr), _visible(true) {}
+GuiElement_t::GuiElement_t() : _align(TOP_LEFT), _parent(nullptr), _visible(true), _enabled(true) {}
 
 GuiElement_t::~GuiElement_t() {
 	if (_parent) {
@@ -123,6 +123,24 @@ GuiElement_t* GuiElement_t::visible(bool val) {
 	return this;
 }
 
+bool GuiElement_t::enabled() const {
+	return _enabled;
+}
+
+GuiElement_t* GuiElement_t::enabled(bool val) {
+	_enabled = val;
+	return this;
+}
+
+GuiElement_t* GuiElement_t::clear() {
+	for (auto child : _childs) {
+		child->_parent = nullptr;
+		delete child;
+	}
+	_childs.clear();
+	return this;
+}
+
 GuiElement_t* GuiElement_t::position(Position_t val) {
 	_position = val;
 	if (_position.type == Position_t::ABSOLUTE) {
@@ -143,8 +161,10 @@ void GuiElement_t::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		on_draw(target, states);
 	}
 
-	for (auto element : _childs) {
-		target.draw(*element, states.transform * _align_pivots[element->align()]);
+	if (_enabled) {
+		for (auto element : _childs) {
+			target.draw(*element, states.transform * _align_pivots[element->align()]);
+		}
 	}
 }
 

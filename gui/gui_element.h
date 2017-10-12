@@ -52,6 +52,9 @@ public:
 	sf::Vector2f bound() const;
 	bool visible() const;
 	GuiElement_t* visible(bool val);
+	bool enabled() const;
+	GuiElement_t* enabled(bool val);
+	GuiElement_t* clear();
 
 	struct Position_t {
 		enum Type_t {
@@ -85,6 +88,7 @@ protected:
 	Align_t _align;
 	sf::Vector2f _size;
 	Position_t _position;
+	bool _enabled;
 	bool _visible;
 
 	GuiElement_t* _parent;
