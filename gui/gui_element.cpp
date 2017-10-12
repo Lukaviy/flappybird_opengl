@@ -153,12 +153,12 @@ sf::Vector2f GuiElement_t::origin_offset() const {
 }
 
 void GuiElement_t::update() {
-	for (int i = 0; i < sizeof(_align_margin_muls) / sizeof(Padding_t); i++) {
+	for (int i = TOP_LEFT; i != CENTER + 1; i++) {
 		_align_pivots[i] = sf::Transform();
-		auto margin = offset_by_align(_margin, _align);
+		auto margin = offset_by_align(_margin, static_cast<Align_t>(i));
 		_align_pivots[i].translate(
-			_size.x * _align_muls[i].x + margin.x,
-			_size.y * _align_muls[i].y + margin.y
+			_size.x * _align_muls[i].x - margin.x,
+			_size.y * _align_muls[i].y - margin.y
 		);
 	}
 
@@ -175,8 +175,8 @@ void GuiElement_t::update() {
 		auto child_pos = child->position();
 		if (child_pos.type == Position_t::RELATIVE) {
 			child->setPosition(sf::Vector2f(
-				_size.x * child_pos.x,
-				_size.y * child_pos.y
+				(_size.x - _margin.left - _margin.right) * child_pos.x,
+				(_size.y - _margin.top - _margin.bottom) * child_pos.y
 			));
 		}
 	}
