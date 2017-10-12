@@ -12,8 +12,11 @@ public:
 	};
 
 	GuiAlignPanel_t();
+	GuiAlignPanel_t* direction(Direction_t);
+	Direction_t direction() const;
 protected:
 	void on_update() override;
+	bool _updating;
 
 	Direction_t _direction;
 };
