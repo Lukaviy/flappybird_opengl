@@ -7,6 +7,10 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include "../gui/gui_element.h"
+#include "../gui/gui_panel.h"
+#include "../gui/gui_align_panel.h"
+#include "../gui/gui_label.h"
 
 class RankTableScene_t : public Scene_t {
 public:
@@ -44,18 +48,32 @@ protected:
 	sf::Text _best_score_text;
 	sf::Color _score_text_color;
 
+	GuiElement_t* _canvas;
+	GuiAlignPanel_t* _main_panel;
+	GuiLabel_t* _press_space_label;
+	GuiAlignPanel_t* _results_table_panel;
+	GuiAlignPanel_t* _enter_your_name_panel;
+	GuiLabel_t* _enter_your_name_label;
+	GuiLabel_t* _player_name_label;
+	GuiAlignPanel_t* _top_text_panel;
+	GuiAlignPanel_t* _rank_table_panel;
+	GuiAlignPanel_t* _best_score_panel;
+	GuiLabel_t* _best_score_text_label;
+	GuiLabel_t* _best_score_label;
+
 	sf::View _view;
 
 	sf::Font _font;
 
-	AnimPointer_t _appearence_background_animation;
-	AnimPointer_t _appearence_text_color_animation;
-	AnimPointer_t _score_appearence_animation;
+	AnimPointer_t _background_appearance_animation;
+	AnimPointer_t _enter_name_appearance_animation;
+	AnimPointer_t _rank_table_appearence_animation;
+	AnimPointer_t _players_scores_appearence_animation;
 	AnimPointer_t _press_space_animation;
+	AnimPointer_t _rank_table_down_animation;
 	AnimPointer_t _best_score_appearence_animation;
-	AnimPointer_t _best_score_text_color_animation;
-	AnimPointer_t _enter_your_name_dissapearing;
-	AnimPointer_t _enter_your_name_text_color_dissapearing;
+	std::vector<GuiLabel_t*> _rank_labels;
+	std::vector<GuiElement_t*> _rank_score_labels;
 
 	std::string _player_name;
 	unsigned int _score;
