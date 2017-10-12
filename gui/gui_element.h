@@ -2,10 +2,13 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <vector>
+#include <functional>
+#include <list>
 
-class GuiElement_t : public sf::Drawable, sf::Transformable {
+class GuiElement_t : public sf::Drawable, protected sf::Transformable {
 public:
 	GuiElement_t();
+	virtual ~GuiElement_t();
 
 	struct Padding_t {
 		float left;
@@ -23,7 +26,7 @@ public:
 	void margin(Padding_t val);
 	Padding_t margin() const;
 
-	void add_child(GuiElement_t& element);
+	void set_parent(GuiElement_t* element);
 
 	enum Align_t {
 		TOP_LEFT = 0,
@@ -39,21 +42,49 @@ public:
 
 	void align(Align_t val);
 	Align_t align() const;
-	virtual sf::Vector2f size() = 0;
 	void size(sf::Vector2f size);
+	virtual sf::Vector2f size() const;
 	sf::Vector2f bound() const;
+	bool visible() const;
+	void visible(bool val);
+
+	struct Position_t {
+		enum Type_t {
+			ABSOLUTE,
+			RELATIVE,
+		} type;
+		float x;
+		float y;
+
+		Position_t() : type(ABSOLUTE), x(0), y(0) {}
+		Position_t(float x, float y, Type_t type) : x(x), y(y), type(type) {}
+		static Position_t relative(float x, float y) {
+			return Position_t(x, y, RELATIVE);
+		}
+		static Position_t absolute(float x, float y) {
+			return Position_t(x, y, ABSOLUTE);
+		}
+	};
+
+	void position(Position_t val);
+	Position_t position() const;
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	virtual void on_draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+	virtual void on_draw(sf::RenderTarget& target, sf::RenderStates states) const {};
 	virtual void on_update() {}
+	virtual sf::Vector2f origin_offset() const;
 	void update();
 
 	Padding_t _padding;
 	Padding_t _margin;
 	Align_t _align;
 	sf::Vector2f _size;
+	Position_t _position;
+	bool _visible;
 
-	std::vector<GuiElement_t*> _childs;
+	GuiElement_t* _parent;
+	std::list<GuiElement_t*> _childs;
+	std::list<GuiElement_t*>::iterator _iter_to_self;
 
 	sf::Transform _align_pivots[9];
 

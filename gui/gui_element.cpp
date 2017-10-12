@@ -25,10 +25,22 @@ const GuiElement_t::Padding_t GuiElement_t::_align_margin_muls[] = {
 	Padding_t(0, 0, 0, 0),		//CENTER
 };
 
-GuiElement_t::GuiElement_t() : _align(TOP_LEFT) {}
+GuiElement_t::GuiElement_t() : _align(TOP_LEFT), _parent(nullptr), _visible(true) {}
+
+GuiElement_t::~GuiElement_t() {
+	if (_parent) {
+		_parent->_childs.erase(_iter_to_self);
+		_parent->update();
+	}
+	for (auto child : _childs) {
+		child->_parent = nullptr;
+		delete child;
+	}
+}
 
 void GuiElement_t::padding(Padding_t val) {
 	_padding = val;
+	update();
 }
 
 GuiElement_t::Padding_t GuiElement_t::padding() const {
@@ -37,29 +49,35 @@ GuiElement_t::Padding_t GuiElement_t::padding() const {
 
 void GuiElement_t::margin(Padding_t val) {
 	_margin = val;
+	update();
 }
 
 GuiElement_t::Padding_t GuiElement_t::margin() const {
 	return _margin;
 }
 
-void GuiElement_t::add_child(GuiElement_t& element) {
-	_childs.push_back(&element);
+void GuiElement_t::set_parent(GuiElement_t* parent) {
+	if (_parent) {
+		_parent->_childs.erase(_iter_to_self);
+	}
+	_parent = parent;
+	if (_parent) {
+		_iter_to_self = _parent->_childs.insert(_parent->_childs.end(), this);
+	}
+	update();
 }
 
 void GuiElement_t::align(Align_t val) {
 	_align = val;
-	auto bound = size();
-	
-	auto offset = offset_by_align(_padding, _align);
-	setOrigin(sf::Vector2f(
-		bound.x * _align_muls[val].x + offset.x,
-		bound.y * _align_muls[val].y + offset.y
-	));
+	update();
 }
 
 GuiElement_t::Align_t GuiElement_t::align() const {
 	return _align;
+}
+
+sf::Vector2f GuiElement_t::size() const {
+	return _size;
 }
 
 void GuiElement_t::size(sf::Vector2f size) {
@@ -74,13 +92,40 @@ sf::Vector2f GuiElement_t::bound() const {
 	);
 }
 
+bool GuiElement_t::visible() const {
+	return _visible;
+}
+
+void GuiElement_t::visible(bool val) {
+	_visible = val;
+}
+
+void GuiElement_t::position(Position_t val) {
+	_position = val;
+	if (_position.type == Position_t::ABSOLUTE) {
+		setPosition(_position.x, _position.y);
+	} else if (_parent) {
+		_parent->update();
+	}
+}
+
+GuiElement_t::Position_t GuiElement_t::position() const {
+	return _position;
+}
+
 void GuiElement_t::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
-	on_draw(target, states);
+	if (_visible) {
+		on_draw(target, states);
+	}
 
 	for (auto element : _childs) {
-		target.draw(*element, _align_pivots[element->align()]);
+		target.draw(*element, states.transform * _align_pivots[element->align()]);
 	}
+}
+
+sf::Vector2f GuiElement_t::origin_offset() const {
+	return sf::Vector2f();
 }
 
 void GuiElement_t::update() {
@@ -92,12 +137,36 @@ void GuiElement_t::update() {
 			_size.y * _align_muls[i].y + margin.y
 		);
 	}
+
+	on_update();
+
+	auto b = bound();
+	auto align_offset = offset_by_align(_padding, _align);
+	auto bound_offset = origin_offset();
+	setOrigin(sf::Vector2f(
+		b.x * _align_muls[_align].x + align_offset.x + bound_offset.x,
+		b.y * _align_muls[_align].y + align_offset.y + bound_offset.y
+	));
+
+	for (auto child : _childs) {
+		auto child_pos = child->position();
+		if (child_pos.type == Position_t::RELATIVE) {
+			child->setPosition(sf::Vector2f(
+				_size.x * child_pos.x,
+				_size.y * child_pos.y
+			));
+		}
+	}
+
+	if (_parent) {
+		_parent->update();
+	}
 }
 
 sf::Vector2f GuiElement_t::offset_by_align(Padding_t pad, Align_t align) {
 	auto mul = _align_margin_muls[align];
 	return sf::Vector2f(
-		pad.left * mul.left - pad.right * mul.right,
-		pad.top * mul.top - pad.bottom * mul.bottom
+		-pad.left * mul.left + pad.right * mul.right,
+		-pad.top * mul.top + pad.bottom * mul.bottom
 	);
 }
