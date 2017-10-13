@@ -62,7 +62,7 @@ endif()
 add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/resources
-        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../resources)
+        ${CMAKE_CURRENT_BINARY_DIR}/resources)
 
 # Install target
 install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
