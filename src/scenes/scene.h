@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Window/Event.hpp>
 
-class Scene_t : public sf::Drawable, public sf::Transformable {
+class Scene_t : public sf::Drawable, protected sf::Transformable {
 public:
 	virtual void step(float dt) {}
 	virtual void send_event(sf::Event event) {}

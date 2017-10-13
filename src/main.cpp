@@ -56,7 +56,6 @@ int main() {
 
 	RankTableScene_t rank_table_scene(rank_table, font);
 	rank_table_scene.set_size(sf::Vector2f(400, 300));
-	rank_table_scene.move(50, 150);
 
 	GameScene_t game_scene(game_core);
 	game_scene.set_font(font);
