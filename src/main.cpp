@@ -37,8 +37,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(500, 500), "Flappy Cube", sf::Style::Titlebar | sf::Style::Close);
 
 	sf::Font font;
-	if (!font.loadFromFile("fonts\\machine_c.otf")) {
-		std::cout << "Can't open \"fonts\\machine_c.otf\" file" << std::endl;
+	if (!font.loadFromFile("resources\\fonts\\machine_c.otf")) {
 		return EXIT_FAILURE;
 	}
 
