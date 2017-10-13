@@ -11,7 +11,7 @@ endif()
 project(FlappyCube)
 
 include_directories("${PROJECT_BINARY_DIR}")
-set(PROJECT_SOURCE_DIR "src")
+set(PROJECT_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
 set(EXECUTABLE_NAME "flappy_cube")
 
@@ -59,6 +59,11 @@ if(SFML_FOUND)
   target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 endif()
 
+add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/resources
+        $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>/../resources)
 
 # Install target
 install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+
