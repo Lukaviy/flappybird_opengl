@@ -14,7 +14,7 @@
 
 class RankTableScene_t : public Scene_t {
 public:
-	~RankTableScene_t() override = default;
+	~RankTableScene_t() override;
 	RankTableScene_t(RankTable_t& rank_table, sf::Font font);
 	void step(float dt) override;
 	void send_event(sf::Event event) override;

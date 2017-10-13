@@ -11,11 +11,11 @@
 class MainTitleScene_t : public Scene_t {
 public:
 	MainTitleScene_t(const sf::Font& font);
+	~MainTitleScene_t() override;
 	void reset() override;
 	void set_font(const sf::Font& font) const;
 	void send_event(sf::Event event) override;
 	void step(float dt) override;
-	~MainTitleScene_t() override = default;
 
 	enum MainTitleSceneStatus_t {
 		SHOWING,

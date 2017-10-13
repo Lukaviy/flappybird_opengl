@@ -282,6 +282,11 @@ RankTableScene_t::RankTableScene_t(RankTable_t& rank_table, sf::Font font) :
 	_background_appearance_animation.start();
 }
 
+RankTableScene_t::~RankTableScene_t() {
+	delete _canvas;
+}
+
+
 void RankTableScene_t::reset() {
 	_state = START;
 	_animator.reset();

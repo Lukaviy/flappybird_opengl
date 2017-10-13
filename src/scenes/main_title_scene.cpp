@@ -38,6 +38,10 @@ MainTitleScene_t::MainTitleScene_t(const sf::Font& font) :
 		->parent(_canvas);
 }
 
+MainTitleScene_t::~MainTitleScene_t() {
+	delete _canvas;
+}
+
 void MainTitleScene_t::reset() {
 	_animator.reset();
 }
