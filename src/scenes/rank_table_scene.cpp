@@ -314,14 +314,12 @@ void RankTableScene_t::send_event(sf::Event event) {
 			_last_type_time = _animator.elapsed_time();
 		}
 		if (event.key.code == sf::Keyboard::Return && !_player_name.empty()) {
-			_rank_table.save_score(_player_name.c_str(), _score);
 			_state = SCORE_SAVED;
 
-			_press_space_animation.start();
+			_rank_table.save_score(_player_name.c_str(), _score);
+			_best_score_label->text(std::to_string(_rank_table[_player_name].score));
 
-			if (_rank_table.exists(_player_name)) {
-				_best_score_label->text(std::to_string(_rank_table[_player_name].score));
-			}
+			_press_space_animation.start();
 		}
 	} else if (_state == SCORE_SAVED && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
 		_state = RESTART_REQUESTED;
