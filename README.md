@@ -23,5 +23,5 @@ After this line.
 ```
 # Detect and add SFML
 ```
-
+And replace <path-to-SFML> to absolute path to unpacked SFML archive.
 If you have higher version, update "cmake/FindSFML.cmake" file.
